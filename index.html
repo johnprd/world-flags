@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>World Flags Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#1a2b4a; --teal:#0d7a6e; --amber:#e09000; --coral:#c94a2a;
+  --purple:#5a3b8f; --steel:#2d5a7a; --green:#1a7a3a;
+  --bg:#f0f4f8; --card:#fff; --border:#dde3ec;
+  --text:#1a2b4a; --muted:#6b7a90; --light:#eef2f7;
+  --radius:14px; --shadow:0 2px 12px rgba(0,0,0,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── HEADER ── */
+.header{background:var(--navy);color:#fff;padding:14px 20px 0;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,0.3);}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.logo{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;display:flex;align-items:center;gap:8px;}
+.logo-badge{background:var(--amber);color:#fff;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;}
+.header-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.header-stats{display:flex;gap:14px;}
+.stat{text-align:center;}
+.stat-num{font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;color:#ffd166;line-height:1;}
+.stat-label{font-size:9px;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.5px;}
+
+/* Player switcher */
+.player-switcher{display:flex;background:rgba(255,255,255,0.12);border-radius:20px;padding:3px;gap:3px;}
+.player-btn{padding:5px 14px;border-radius:16px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:transparent;color:rgba(255,255,255,0.65);transition:all 0.2s;}
+.player-btn.active{background:#fff;color:var(--navy);}
+
+/* Streak badge */
+.streak-badge{display:flex;align-items:center;gap:5px;background:rgba(255,209,102,0.18);border:1px solid rgba(255,209,102,0.35);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700;color:#ffd166;}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:3px;overflow-x:auto;padding-bottom:0;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{padding:9px 16px;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;border-radius:9px 9px 0 0;white-space:nowrap;color:rgba(255,255,255,0.55);border:none;background:transparent;transition:all 0.2s;}
+.tab:hover{color:#fff;background:rgba(255,255,255,0.1);}
+.tab.active{background:var(--bg);color:var(--navy);}
+
+/* ── SEARCH ── */
+.search-wrap{background:#fff;padding:10px 20px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;}
+.search-input{flex:1;padding:9px 16px;border:1.5px solid var(--border);border-radius:25px;font-size:14px;font-family:'Nunito Sans',sans-serif;outline:none;transition:border-color 0.2s;}
+.search-input:focus{border-color:var(--teal);}
+.search-clear{background:var(--light);border:none;border-radius:20px;padding:7px 13px;font-size:12px;cursor:pointer;color:var(--muted);font-family:'Nunito Sans',sans-serif;}
+
+/* ── MAIN ── */
+.main{padding:18px;max-width:1200px;margin:0 auto;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ── CONTINENT PROGRESS ── */
+.continent-progress{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:22px;}
+.cp-card{background:#fff;border-radius:12px;padding:14px 12px;box-shadow:var(--shadow);text-align:center;cursor:pointer;transition:transform 0.15s;}
+.cp-card:hover{transform:translateY(-2px);}
+.cp-ring{position:relative;width:56px;height:56px;margin:0 auto 8px;}
+.cp-ring svg{transform:rotate(-90deg);}
+.cp-ring .track{fill:none;stroke:#eef2f7;stroke-width:5;}
+.cp-ring .fill{fill:none;stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset 1s ease;}
+.cp-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Nunito',sans-serif;font-size:12px;font-weight:900;color:var(--navy);}
+.cp-name{font-size:11px;font-weight:700;color:var(--navy);}
+.cp-sub{font-size:10px;color:var(--muted);}
+
+/* ── DAILY CHALLENGE ── */
+.daily-card{background:linear-gradient(135deg,#1a2b4a 0%,#2d5a7a 100%);border-radius:var(--radius);padding:20px;margin-bottom:22px;color:#fff;display:flex;gap:20px;align-items:center;flex-wrap:wrap;box-shadow:0 4px 20px rgba(26,43,74,0.3);}
+.daily-flag{width:120px;height:80px;border-radius:8px;overflow:hidden;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+.daily-flag img{width:100%;height:100%;object-fit:cover;}
+.daily-info{flex:1;min-width:180px;}
+.daily-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,209,102,0.85);margin-bottom:4px;}
+.daily-name{font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;margin-bottom:6px;}
+.daily-tip{font-size:12.5px;color:rgba(255,255,255,0.72);line-height:1.5;margin-bottom:12px;}
+.daily-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.daily-btn{padding:8px 16px;border-radius:20px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.daily-btn.map{background:rgba(255,255,255,0.15);color:#fff;}
+.daily-btn.wiki{background:rgba(255,255,255,0.15);color:#fff;}
+.daily-btn.quiz{background:var(--amber);color:#fff;}
+.daily-btn:hover{opacity:0.85;transform:scale(1.04);}
+.daily-quiz-wrap{margin-top:14px;width:100%;}
+.dq-question{font-size:13px;font-weight:700;margin-bottom:10px;color:rgba(255,255,255,0.9);}
+.dq-options{display:flex;gap:8px;flex-wrap:wrap;}
+.dq-opt{padding:8px 16px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.3);background:transparent;color:#fff;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.dq-opt:hover{background:rgba(255,255,255,0.15);}
+.dq-opt.correct{background:#2ecc71;border-color:#2ecc71;}
+.dq-opt.wrong{background:#e74c3c;border-color:#e74c3c;}
+.dq-result{margin-top:10px;font-size:13px;font-weight:700;}
+
+/* ── PROGRESS BAR ── */
+.progress-bar-wrap{background:#fff;border-radius:var(--radius);padding:14px 18px;margin-bottom:18px;box-shadow:var(--shadow);}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:7px;}
+.progress-track{height:9px;background:var(--light);border-radius:5px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),#2ecc71);border-radius:5px;transition:width 0.5s ease;}
+
+/* ── SECTION ── */
+.section{margin-bottom:28px;}
+.section-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;padding:14px 16px;border-radius:var(--radius);}
+.section-icon{font-size:24px;line-height:1;flex-shrink:0;}
+.section-title{font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;color:var(--navy);margin-bottom:2px;}
+.section-sub{font-size:12.5px;color:var(--muted);line-height:1.5;}
+.section-count{font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;margin-left:6px;vertical-align:middle;}
+
+/* ── FLAG GRID ── */
+.flag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:11px;}
+@media(max-width:600px){.flag-grid{grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:9px;}}
+
+.flag-card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:2px solid transparent;position:relative;transition:transform 0.18s,box-shadow 0.18s;}
+.flag-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.14);}
+.flag-card.known{border-color:#2ecc71;}
+.flag-card.flipped .flag-front{display:none;}
+.flag-card.flipped .flag-back{display:flex;}
+
+.flag-front{display:block;}
+.flag-back{display:none;flex-direction:column;justify-content:center;align-items:center;min-height:128px;padding:12px;background:var(--navy);color:#fff;text-align:center;}
+.flag-back .country-name-back{font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:5px;}
+.flag-back .tip-back{font-size:11px;color:rgba(255,255,255,0.72);line-height:1.4;margin-bottom:10px;}
+.flip-actions{display:flex;gap:6px;justify-content:center;}
+.flip-link{padding:5px 10px;border-radius:12px;background:rgba(255,255,255,0.15);color:#fff;font-size:10px;font-weight:700;border:none;cursor:pointer;font-family:'Nunito',sans-serif;text-decoration:none;display:inline-block;}
+.flip-link:hover{background:rgba(255,255,255,0.28);}
+
+.flag-img-wrap{width:100%;height:96px;overflow:hidden;background:#f5f5f5;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.flag-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity 0.3s;}
+.flag-img-wrap img.loading{opacity:0;}
+.flag-img-wrap img.loaded{opacity:1;}
+
+.flag-info{padding:9px 10px;}
+.country-name{font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--navy);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;display:flex;align-items:center;gap:4px;}
+.country-name:hover{color:var(--teal);}
+.name-icons{display:flex;gap:3px;margin-left:auto;flex-shrink:0;}
+.name-icon{font-size:11px;cursor:pointer;padding:1px 3px;border-radius:4px;background:var(--light);border:none;line-height:1.4;transition:background 0.15s;}
+.name-icon:hover{background:var(--border);}
+.flag-tip{font-size:10.5px;color:var(--muted);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.flag-code{font-size:9.5px;color:#b0bac9;font-weight:600;letter-spacing:0.5px;margin-top:3px;}
+
+.known-btn{position:absolute;top:5px;right:5px;background:rgba(255,255,255,0.92);border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:transform 0.15s;z-index:2;}
+.known-btn:hover{transform:scale(1.2);}
+.flag-card.known .known-btn{background:#2ecc71;color:#fff;}
+
+.speak-btn{position:absolute;top:5px;left:5px;background:rgba(255,255,255,0.92);border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:transform 0.15s;z-index:2;}
+.speak-btn:hover{transform:scale(1.15);}
+
+/* ── TIP BOX ── */
+.tip-box{padding:12px 16px;border-radius:11px;margin-bottom:16px;font-size:13px;line-height:1.6;font-weight:600;}
+.tip-box b{font-weight:800;}
+
+/* ── CONFUSABLE ── */
+.pair-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
+.pair-card{background:#fff;border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;}
+.pair-flags{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.pair-flag{width:60px;height:40px;border-radius:5px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.15);cursor:pointer;}
+.pair-flag img{width:100%;height:100%;object-fit:cover;}
+.pair-vs{font-size:10px;font-weight:800;color:var(--muted);}
+.pair-info{flex:1;min-width:0;}
+.pair-names{font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;color:var(--coral);margin-bottom:3px;}
+.pair-trick{font-size:11.5px;color:var(--text);line-height:1.4;}
+
+/* ── UNIQUE ── */
+.unique-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px;}
+.unique-card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform 0.15s;}
+.unique-card:hover{transform:translateY(-2px);}
+.unique-img{width:100%;height:105px;object-fit:cover;display:block;background:#f0f0f0;}
+.unique-body{padding:11px;}
+.unique-name{font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--navy);margin-bottom:2px;}
+.unique-why{font-size:11px;color:var(--muted);line-height:1.4;}
+.unique-badge{display:inline-block;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:10px;margin-bottom:5px;background:#fff3cd;color:#a06000;}
+
+/* ── QUIZ ── */
+.quiz-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px;padding:14px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
+.quiz-btn{padding:9px 18px;border-radius:22px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.quiz-btn.primary{background:var(--teal);color:#fff;}
+.quiz-btn.primary:hover{background:#0a6560;}
+.quiz-btn.secondary{background:var(--light);color:var(--navy);}
+.quiz-btn.secondary:hover{background:var(--border);}
+.quiz-btn.danger{background:#fee2e2;color:#c00;}
+.quiz-score{font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-left:auto;}
+.score-known{color:#2ecc71;}
+.score-tricky{color:#e74c3c;}
+
+/* ── PLAN ── */
+.plan-grid{display:grid;gap:8px;}
+.plan-row{display:grid;grid-template-columns:96px 148px 1fr;background:#fff;border-radius:11px;overflow:hidden;box-shadow:var(--shadow);}
+@media(max-width:600px){.plan-row{grid-template-columns:76px 1fr;}.plan-strategy{display:none;}}
+.plan-days{background:var(--navy);color:#fff;padding:12px 10px;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;text-align:center;}
+.plan-focus{background:var(--light);padding:12px 10px;font-size:12.5px;font-weight:700;color:var(--navy);display:flex;align-items:center;}
+.plan-strategy{padding:12px 14px;font-size:12px;color:var(--muted);display:flex;align-items:center;line-height:1.5;}
+.plan-row.review .plan-days{background:var(--amber);}
+
+/* ── SITES ── */
+.sites-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:12px;}
+.site-card{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);border-left:4px solid var(--teal);}
+.site-name{font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;color:var(--navy);margin-bottom:2px;}
+.site-url{font-size:10.5px;color:var(--teal);margin-bottom:7px;}
+.site-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:7px;}
+.site-desc{font-size:12.5px;color:var(--muted);line-height:1.5;}
+.site-link{display:inline-block;margin-top:9px;padding:6px 14px;background:var(--light);border-radius:18px;font-size:11.5px;font-weight:700;color:var(--navy);text-decoration:none;}
+.site-link:hover{background:var(--border);}
+
+/* ── MNEMONICS ── */
+.mnemonic-grid{display:grid;gap:7px;}
+.mnemonic-row{display:grid;grid-template-columns:155px 1fr;background:#fff;border-radius:9px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,0.07);}
+@media(max-width:500px){.mnemonic-row{grid-template-columns:1fr;}}
+.mnemonic-country{background:#f0f4ff;padding:11px 13px;font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:800;color:var(--navy);display:flex;align-items:center;}
+.mnemonic-text{padding:11px 14px;font-size:12.5px;color:var(--text);line-height:1.5;display:flex;align-items:center;}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(10,20,40,0.72);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px);}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:modalIn 0.25s ease;}
+@keyframes modalIn{from{opacity:0;transform:scale(0.93) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.modal-header{position:relative;height:180px;overflow:hidden;border-radius:20px 20px 0 0;}
+.modal-flag-bg{width:100%;height:100%;object-fit:cover;filter:blur(8px) brightness(0.5);transform:scale(1.1);}
+.modal-flag-main{position:absolute;bottom:16px;left:20px;width:110px;height:73px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.4);object-fit:cover;}
+.modal-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.modal-country-name{position:absolute;bottom:20px;left:148px;color:#fff;font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;text-shadow:0 2px 8px rgba(0,0,0,0.6);}
+.modal-continent{position:absolute;bottom:6px;left:148px;color:rgba(255,255,255,0.75);font-size:11px;font-weight:700;}
+.modal-body{padding:18px 20px;}
+.modal-facts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.fact-card{background:var(--light);border-radius:10px;padding:10px 12px;}
+.fact-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;}
+.fact-value{font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--navy);}
+.modal-tip{background:#f0f4ff;border-radius:10px;padding:12px 14px;font-size:13px;color:var(--steel);line-height:1.6;margin-bottom:16px;font-weight:600;}
+.modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.modal-btn{padding:10px 18px;border-radius:22px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;}
+.modal-btn:hover{opacity:0.85;transform:scale(1.03);}
+.modal-btn.map{background:var(--teal);color:#fff;}
+.modal-btn.wiki{background:var(--steel);color:#fff;}
+.modal-btn.speak{background:var(--purple);color:#fff;}
+.modal-btn.known{background:#2ecc71;color:#fff;}
+.modal-map{width:100%;height:260px;border-radius:12px;border:none;margin-bottom:6px;}
+
+/* ── OFFLINE ── */
+.offline-notice{background:#fff9e6;border:1.5px solid #f0c040;border-radius:10px;padding:11px 15px;font-size:12.5px;color:#7a5800;margin-bottom:18px;display:none;}
+
+/* ── SCROLL TOP ── */
+.scroll-top{position:fixed;bottom:20px;right:20px;background:var(--navy);color:#fff;border:none;border-radius:50%;width:42px;height:42px;font-size:20px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:99;}
+.scroll-top.visible{display:flex;}
+
+/* ── NO RESULTS ── */
+.no-results{text-align:center;padding:50px 20px;color:var(--muted);font-size:14px;display:none;}
+.no-results.show{display:block;}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:24px 20px;color:var(--muted);font-size:11.5px;border-top:1px solid var(--border);margin-top:20px;background:#fff;}
+
+/* Color helpers */
+.bg-teal{background:#e8f5f2;}.bg-amber{background:#fff8e8;}.bg-coral{background:#fdf0ed;}
+.bg-purple{background:#f2eefa;}.bg-steel{background:#edf3f8;}.bg-green{background:#e8f5ec;}
+.tip-teal{background:#e8f5f2;color:#0a5a51;}.tip-amber{background:#fff8e8;color:#7a5000;}
+.tip-purple{background:#f2eefa;color:#3a1f6e;}.tip-coral{background:#fdf0ed;color:#8a2a10;}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════════════════ -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo">🌍 World Flags Study Guide <span class="logo-badge">195 Countries</span></div>
+    <div class="header-right">
+      <div class="streak-badge" id="streak-badge">🔥 <span id="streak-num">0</span> day streak</div>
+      <div class="player-switcher">
+        <button class="player-btn active" onclick="switchPlayer(1)" id="pbtn1">👧 Player 1</button>
+        <button class="player-btn" onclick="switchPlayer(2)" id="pbtn2">👦 Player 2</button>
+      </div>
+      <div class="header-stats">
+        <div class="stat"><div class="stat-num" id="known-count">0</div><div class="stat-label">Known ✓</div></div>
+        <div class="stat"><div class="stat-num" id="pct-count">0%</div><div class="stat-label">Progress</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showPanel('home',this)">🏠 Home</button>
+    <button class="tab" onclick="showPanel('patterns',this)">🔷 Patterns</button>
+    <button class="tab" onclick="showPanel('colors',this)">🎨 Colors</button>
+    <button class="tab" onclick="showPanel('regions',this)">🌍 Regions</button>
+    <button class="tab" onclick="showPanel('confusable',this)">⚠️ Confusable</button>
+    <button class="tab" onclick="showPanel('unique',this)">⭐ Unique</button>
+    <button class="tab" onclick="showPanel('quiz',this)">🎯 Quiz</button>
+    <button class="tab" onclick="showPanel('plan',this)">📅 30-Day Plan</button>
+    <button class="tab" onclick="showPanel('tips',this)">💡 Tricks</button>
+    <button class="tab" onclick="showPanel('sites',this)">🔗 Websites</button>
+  </div>
+</div>
+
+<!-- ══ SEARCH ══════════════════════════════════════════════════════════ -->
+<div class="search-wrap">
+  <input class="search-input" id="search" placeholder="Search any country…" oninput="doSearch(this.value)">
+  <button class="search-clear" onclick="clearSearch()">Clear</button>
+</div>
+
+<!-- ══ MODAL ══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <img class="modal-flag-bg" id="modal-flag-bg" src="" alt="">
+      <img class="modal-flag-main" id="modal-flag-main" src="" alt="">
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+      <div class="modal-country-name" id="modal-name"></div>
+      <div class="modal-continent" id="modal-continent"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-facts" id="modal-facts"></div>
+      <div class="modal-tip" id="modal-tip"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+      <iframe class="modal-map" id="modal-map" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src=""></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══════════════════════════════════════════════════════════ -->
+<div class="main">
+  <div class="offline-notice" id="offline-notice">⚠️ <b>No internet.</b> Flag images and maps need Wi-Fi. Connect and reload.</div>
+
+  <!-- ══ HOME PANEL ══ -->
+  <div class="panel active" id="panel-home">
+
+    <!-- Daily Challenge -->
+    <div class="daily-card" id="daily-card">
+      <div class="daily-flag"><img id="daily-img" src="" alt=""></div>
+      <div class="daily-info">
+        <div class="daily-label">🌟 Flag of the Day</div>
+        <div class="daily-name" id="daily-name">Loading…</div>
+        <div class="daily-tip" id="daily-tip"></div>
+        <div class="daily-actions">
+          <button class="daily-btn map" id="daily-map-btn">🗺️ Map</button>
+          <button class="daily-btn wiki" id="daily-wiki-btn">📖 Wikipedia</button>
+          <button class="daily-btn quiz" onclick="startDailyQuiz()">🎯 Quick Quiz</button>
+        </div>
+        <div class="daily-quiz-wrap" id="daily-quiz-wrap" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-bar-wrap">
+      <div class="progress-label"><span id="player-name-label">Player 1's progress</span><span id="progress-text">0 of 195 known</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <!-- Continent Rings -->
+    <div style="font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;color:var(--navy);margin-bottom:12px;">Progress by Continent</div>
+    <div class="continent-progress" id="continent-progress"></div>
+
+    <!-- Quick links -->
+    <div style="font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;color:var(--navy);margin-bottom:12px;margin-top:8px;">Quick Start</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:10px;">
+      <button onclick="showPanel('patterns',null)" style="padding:14px;border-radius:12px;border:none;background:#fff;box-shadow:var(--shadow);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--navy);cursor:pointer;text-align:left;">🔷 Learn Patterns</button>
+      <button onclick="showPanel('confusable',null)" style="padding:14px;border-radius:12px;border:none;background:#fff;box-shadow:var(--shadow);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--navy);cursor:pointer;text-align:left;">⚠️ Tricky Pairs</button>
+      <button onclick="showPanel('unique',null)" style="padding:14px;border-radius:12px;border:none;background:#fff;box-shadow:var(--shadow);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--navy);cursor:pointer;text-align:left;">⭐ Unique Flags</button>
+      <button onclick="startQuizAndGo()" style="padding:14px;border-radius:12px;border:none;background:var(--teal);box-shadow:var(--shadow);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#fff;cursor:pointer;text-align:left;">🎯 Start Quiz</button>
+    </div>
+  </div>
+
+  <!-- ══ PATTERNS PANEL ══ -->
+  <div class="panel" id="panel-patterns">
+    <div class="section">
+      <div class="section-header bg-steel">
+        <div class="section-icon">✝️</div>
+        <div><div class="section-title">Nordic Cross <span class="section-count" style="background:#dde8f0;color:#2d5a7a;">5 flags</span></div>
+        <div class="section-sub">Off-center cross shifted LEFT. Denmark is the original (~1370). Others just change the colors.</div></div>
+      </div>
+      <div class="tip-box tip-purple">💡 <b>Trick:</b> Cross is always shifted LEFT. What color is the background? What color is the cross? That's all you need to know.</div>
+      <div class="flag-grid" id="grid-nordic"></div>
+    </div>
+    <div class="section">
+      <div class="section-header bg-teal">
+        <div class="section-icon">🟦</div>
+        <div><div class="section-title">Vertical Tricolors <span class="section-count" style="background:#d0ece8;color:#0d7a6e;">14+ flags</span></div>
+        <div class="section-sub">France (1789) invented this. The LEFT stripe is your main identifier.</div></div>
+      </div>
+      <div class="tip-box tip-teal">💡 <b>Trick:</b> Cover the flag. What color is on the far LEFT? Green = African or Irish. Blue = French. Black = Belgium/Germany.</div>
+      <div class="flag-grid" id="grid-vtri"></div>
+    </div>
+    <div class="section">
+      <div class="section-header bg-amber">
+        <div class="section-icon">🟥</div>
+        <div><div class="section-title">Horizontal Tricolors <span class="section-count" style="background:#faecd0;color:#c97b00;">14+ flags</span></div>
+        <div class="section-sub">Germany is anchor for Europe. Red-White-Black = Pan-Arab family. TOP stripe is the identifier.</div></div>
+      </div>
+      <div class="tip-box tip-amber">💡 <b>Trick:</b> Red-White-Black = Middle East. What makes each different: the emblem, stars, or colored triangle.</div>
+      <div class="flag-grid" id="grid-htri"></div>
+    </div>
+    <div class="section">
+      <div class="section-header bg-coral">
+        <div class="section-icon">🇬🇧</div>
+        <div><div class="section-title">Union Jack Family <span class="section-count" style="background:#fde8e3;color:#c94a2a;">6 flags</span></div>
+        <div class="section-sub">Countries with historical ties to Britain. Union Jack = 3 crosses combined.</div></div>
+      </div>
+      <div class="tip-box tip-coral">💡 <b>Aus vs NZ:</b> NZ = 4 red stars, no 7-point star. Australia = 6 stars including the big 7-pointer. "Bigger country = more stars."</div>
+      <div class="flag-grid" id="grid-uj"></div>
+    </div>
+    <div class="section">
+      <div class="section-header bg-purple">
+        <div class="section-icon">☪️</div>
+        <div><div class="section-title">Star & Crescent <span class="section-count" style="background:#e8e0f5;color:#5a3b8f;">12 flags</span></div>
+        <div class="section-sub">Islamic heritage symbol. Background color = main identifier.</div></div>
+      </div>
+      <div class="flag-grid" id="grid-crescent"></div>
+    </div>
+  </div>
+
+  <!-- ══ COLORS PANEL ══ -->
+  <div class="panel" id="panel-colors">
+    <div class="section">
+      <div class="section-header bg-green">
+        <div class="section-icon">🌍</div>
+        <div><div class="section-title">Pan-African Colors <span class="section-count" style="background:#d0ecd8;color:#1a7a3a;">50+ flags</span></div>
+        <div class="section-sub">Green, Yellow/Gold, Red — inspired by Ethiopia (never colonized). Over 50 nations adopted these colors after independence.</div></div>
+      </div>
+      <div class="tip-box tip-teal">💡 <b>Trick:</b> Learn Ethiopia, Ghana, Kenya as anchors. Then the SYMBOL or arrangement tells you which country. Nigeria = simplest (just green-white-green, no symbol).</div>
+      <div class="flag-grid" id="grid-panafrican"></div>
+    </div>
+    <div class="section">
+      <div class="section-header bg-amber">
+        <div class="section-icon">🌙</div>
+        <div><div class="section-title">Pan-Arab Colors <span class="section-count" style="background:#faecd0;color:#c97b00;">9+ flags</span></div>
+        <div class="section-sub">Red, White, Black, Green — from the 1916 Arab Revolt flag. Each color honors a historical Arab dynasty.</div></div>
+      </div>
+      <div class="flag-grid" id="grid-panarab"></div>
+    </div>
+    <div class="section">
+      <div class="section-header bg-coral">
+        <div class="section-icon">🔴</div>
+        <div><div class="section-title">Red & White — Easy to Confuse! <span class="section-count" style="background:#fde8e3;color:#c94a2a;">10 flags</span></div>
+        <div class="section-sub">Just two colors — arrangement and shape make all the difference.</div></div>
+      </div>
+      <div class="tip-box tip-coral">💡 <b>Trick:</b> Poland = WHITE top. Indonesia = RED top. Switzerland = SQUARE. Japan = red CIRCLE in center.</div>
+      <div class="flag-grid" id="grid-redwhite"></div>
+    </div>
+    <div class="section">
+      <div class="section-header bg-steel">
+        <div class="section-icon">💙</div>
+        <div><div class="section-title">Central American Blue & White <span class="section-count" style="background:#dde8f0;color:#2d5a7a;">5 flags</span></div>
+        <div class="section-sub">Were ONE country (Federal Republic of Central America 1823–1841). Kept the same blue & white palette.</div></div>
+      </div>
+      <div class="flag-grid" id="grid-centralamerica"></div>
+    </div>
+    <div class="section">
+      <div class="section-header bg-amber">
+        <div class="section-icon">💛</div>
+        <div><div class="section-title">Gran Colombia — Yellow, Blue, Red <span class="section-count" style="background:#faecd0;color:#c97b00;">3 flags</span></div>
+        <div class="section-sub">Colombia, Venezuela, Ecuador were ONE country until 1830. All share yellow-blue-red.</div></div>
+      </div>
+      <div class="flag-grid" id="grid-grancolombia"></div>
+    </div>
+  </div>
+
+  <!-- ══ REGIONS PANEL ══ -->
+  <div class="panel" id="panel-regions">
+    <div class="section"><div class="section-header bg-steel"><div class="section-icon">🏰</div><div><div class="section-title">Europe</div><div class="section-sub">Nordic crosses, tricolors, coats of arms.</div></div></div><div class="flag-grid" id="grid-europe"></div></div>
+    <div class="section"><div class="section-header bg-amber"><div class="section-icon">🌎</div><div><div class="section-title">Americas — North & Caribbean</div><div class="section-sub">USA, Canada, Central American blue-white family, Caribbean islands.</div></div></div><div class="flag-grid" id="grid-namerica"></div></div>
+    <div class="section"><div class="section-header bg-coral"><div class="section-icon">🌎</div><div><div class="section-title">Americas — South</div><div class="section-sub">Gran Colombia trio + Brazil + Chile, Peru, Argentina.</div></div></div><div class="flag-grid" id="grid-samerica"></div></div>
+    <div class="section"><div class="section-header bg-teal"><div class="section-icon">🌏</div><div><div class="section-title">Asia — East & Southeast</div><div class="section-sub">Japan & China are anchors. Cambodia has a building. Nepal is the triangle.</div></div></div><div class="flag-grid" id="grid-seasia"></div></div>
+    <div class="section"><div class="section-header bg-purple"><div class="section-icon">🏔️</div><div><div class="section-title">Asia — Central & South</div><div class="section-sub">India, Pakistan, Nepal, Bangladesh + the -stan countries.</div></div></div><div class="flag-grid" id="grid-casia"></div></div>
+    <div class="section"><div class="section-header bg-amber"><div class="section-icon">🕌</div><div><div class="section-title">Middle East</div><div class="section-sub">Crescent, Pan-Arab colors, Arabic text. Qatar vs Bahrain is the classic trap.</div></div></div><div class="flag-grid" id="grid-middleeast"></div></div>
+    <div class="section"><div class="section-header bg-green"><div class="section-icon">🌍</div><div><div class="section-title">Africa — North</div></div></div><div class="flag-grid" id="grid-nafrica"></div></div>
+    <div class="section"><div class="section-header bg-teal"><div class="section-icon">🌍</div><div><div class="section-title">Africa — West</div></div></div><div class="flag-grid" id="grid-wafrica"></div></div>
+    <div class="section"><div class="section-header bg-coral"><div class="section-icon">🌍</div><div><div class="section-title">Africa — Central & East</div></div></div><div class="flag-grid" id="grid-ceafrica"></div></div>
+    <div class="section"><div class="section-header bg-purple"><div class="section-icon">🌍</div><div><div class="section-title">Africa — Southern</div></div></div><div class="flag-grid" id="grid-safrica"></div></div>
+    <div class="section"><div class="section-header bg-steel"><div class="section-icon">🌊</div><div><div class="section-title">Oceania</div><div class="section-sub">Many carry Union Jack. Island nations use unique symbols.</div></div></div><div class="flag-grid" id="grid-oceania"></div></div>
+  </div>
+
+  <!-- ══ CONFUSABLE PANEL ══ -->
+  <div class="panel" id="panel-confusable">
+    <div class="tip-box tip-coral" style="margin-bottom:18px;">⚠️ <b>These pairs trip up even geography experts.</b> Knowing the confusion exists is half the battle.</div>
+    <div class="pair-grid" id="pair-grid"></div>
+  </div>
+
+  <!-- ══ UNIQUE PANEL ══ -->
+  <div class="panel" id="panel-unique">
+    <div class="tip-box tip-amber" style="margin-bottom:18px;">⭐ <b>Learn these first!</b> They break every rule and anchor your mental map of all 195 flags.</div>
+    <div class="unique-grid" id="unique-grid"></div>
+  </div>
+
+  <!-- ══ QUIZ PANEL ══ -->
+  <div class="panel" id="panel-quiz">
+    <div class="quiz-controls">
+      <div><div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:3px;">Quiz Mode</div>
+      <div style="font-size:11.5px;color:var(--muted);">Click a flag to flip and reveal. Mark ✓ if you knew it in 3 seconds!</div></div>
+      <button class="quiz-btn primary" onclick="startQuiz()">🔀 Shuffle All</button>
+      <button class="quiz-btn secondary" onclick="quizUnknown()">Quiz Unknown Only</button>
+      <button class="quiz-btn danger" onclick="resetProgress()">Reset Progress</button>
+      <div class="quiz-score" style="margin-left:auto;">✓ <span class="score-known" id="q-known">0</span></div>
+    </div>
+    <div class="flag-grid" id="grid-quiz"></div>
+  </div>
+
+  <!-- ══ PLAN PANEL ══ -->
+  <div class="panel" id="panel-plan">
+    <div class="tip-box tip-teal" style="margin-bottom:18px;">📅 <b>Builds cumulatively</b> — each group adds to what you already know. ~20–30 min/day. Two learners together = twice as fast!</div>
+    <div class="plan-grid" id="plan-grid"></div>
+  </div>
+
+  <!-- ══ TIPS PANEL ══ -->
+  <div class="panel" id="panel-tips">
+    <div class="tip-box tip-purple" style="margin-bottom:18px;">🧠 <b>Stories, rhymes, comparisons, and weird facts</b> stick far better than repetition alone.</div>
+    <div class="mnemonic-grid" id="mnemonic-grid"></div>
+    <div style="font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;color:var(--navy);margin:22px 0 12px;">🎮 Games to Play Together</div>
+    <div class="flag-grid" id="games-grid"></div>
+  </div>
+
+  <!-- ══ SITES PANEL ══ -->
+  <div class="panel" id="panel-sites">
+    <div class="tip-box tip-teal" style="margin-bottom:18px;">🔗 <b>Use this guide for structure,</b> then practice with these tools for active recall.</div>
+    <div class="sites-grid" id="sites-grid"></div>
+  </div>
+
+  <div class="no-results" id="no-results">No countries matched. Try a shorter word!</div>
+</div>
+
+<button class="scroll-top" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="footer">World Flags Study Guide · 195 countries · Flags from flagcdn.com · Maps from Google Maps · Tap any flag for details</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════════════
+// Each entry: [iso2, name, tip, capital, population, continent, lat, lng]
+const COUNTRY_META = {
+  'dk':['Copenhagen','5.9M','Europe',55.68,12.57],
+  'se':['Stockholm','10.4M','Europe',59.33,18.07],
+  'no':['Oslo','5.4M','Europe',59.91,10.75],
+  'fi':['Helsinki','5.5M','Europe',60.17,24.94],
+  'is':['Reykjavik','370K','Europe',64.13,-21.93],
+  'fr':['Paris','67M','Europe',48.86,2.35],
+  'it':['Rome','60M','Europe',41.90,12.49],
+  'ie':['Dublin','5M','Europe',53.33,-6.25],
+  'ci':['Yamoussoukro','27M','Africa',6.82,-5.28],
+  'be':['Brussels','11.6M','Europe',50.85,4.35],
+  'de':['Berlin','83M','Europe',52.52,13.40],
+  'nl':['Amsterdam','17.5M','Europe',52.37,4.90],
+  'lu':['Luxembourg','640K','Europe',49.61,6.13],
+  'ru':['Moscow','144M','Europe/Asia',55.75,37.62],
+  'at':['Vienna','9M','Europe',48.21,16.37],
+  'hu':['Budapest','9.7M','Europe',47.50,19.04],
+  'bg':['Sofia','6.5M','Europe',42.70,23.32],
+  'pl':['Warsaw','38M','Europe',52.23,21.01],
+  'id':['Jakarta','274M','Asia',-6.21,106.85],
+  'mc':['Monaco','38K','Europe',43.74,7.43],
+  'ua':['Kyiv','44M','Europe',50.45,30.52],
+  'ro':['Bucharest','19M','Europe',44.44,26.10],
+  'td':['N\'Djamena','17M','Africa',12.11,15.05],
+  'md':['Chișinău','2.6M','Europe',47.00,28.86],
+  'ad':['Andorra la Vella','77K','Europe',42.51,1.52],
+  'ng':['Abuja','213M','Africa',9.07,7.40],
+  'ye':['Sanaa','30M','Asia',15.37,44.19],
+  'sy':['Damascus','21M','Asia',33.51,36.29],
+  'iq':['Baghdad','40M','Asia',33.34,44.40],
+  'eg':['Cairo','102M','Africa',30.04,31.24],
+  'gb':['London','67M','Europe',51.51,-0.13],
+  'au':['Canberra','26M','Oceania',-35.28,149.13],
+  'nz':['Wellington','5M','Oceania',-41.29,174.78],
+  'fj':['Suva','930K','Oceania',-18.14,178.44],
+  'pg':['Port Moresby','9M','Oceania',-9.44,147.18],
+  'tv':['Funafuti','12K','Oceania',-8.52,179.20],
+  'tr':['Ankara','84M','Asia',39.93,32.86],
+  'pk':['Islamabad','220M','Asia',33.72,73.06],
+  'dz':['Algiers','44M','Africa',36.74,3.06],
+  'ma':['Rabat','37M','Africa',34.01,-6.85],
+  'tn':['Tunis','12M','Africa',36.82,10.17],
+  'ly':['Tripoli','6.9M','Africa',32.90,13.18],
+  'my':['Kuala Lumpur','32M','Asia',3.14,101.69],
+  'sg':['Singapore','5.8M','Asia',1.35,103.82],
+  'az':['Baku','10M','Asia',40.41,49.87],
+  'uz':['Tashkent','35M','Asia',41.30,69.24],
+  'tm':['Ashgabat','6M','Asia',37.95,58.38],
+  'mr':['Nouakchott','4.5M','Africa',18.08,-15.97],
+  'et':['Addis Ababa','117M','Africa',9.03,38.74],
+  'gh':['Accra','32M','Africa',5.55,-0.20],
+  'ke':['Nairobi','54M','Africa',-1.29,36.82],
+  'tz':['Dodoma','61M','Africa',-6.17,35.74],
+  'ug':['Kampala','47M','Africa',0.32,32.58],
+  'zw':['Harare','15M','Africa',-17.83,31.05],
+  'zm':['Lusaka','18M','Africa',-15.42,28.28],
+  'mz':['Maputo','32M','Africa',-25.97,32.59],
+  'bj':['Porto-Novo','12M','Africa',6.37,2.42],
+  'bf':['Ouagadougou','21M','Africa',12.37,-1.54],
+  'tg':['Lomé','8.2M','Africa',6.14,1.22],
+  'sl':['Freetown','8M','Africa',8.49,-13.23],
+  'ml':['Bamako','22M','Africa',12.65,-8.00],
+  'gn':['Conakry','13M','Africa',9.54,-13.68],
+  'sn':['Dakar','17M','Africa',14.72,-17.47],
+  'lr':['Monrovia','5M','Africa',6.30,-10.80],
+  'cm':['Yaoundé','27M','Africa',3.87,11.52],
+  'ga':['Libreville','2.2M','Africa',0.39,9.45],
+  'jo':['Amman','10M','Asia',31.95,35.93],
+  'ps':['Ramallah','5M','Asia',31.90,35.20],
+  'sa':['Riyadh','35M','Asia',24.69,46.72],
+  'kw':['Kuwait City','4.3M','Asia',29.37,47.98],
+  'ae':['Abu Dhabi','10M','Asia',24.47,54.37],
+  'bh':['Manama','1.7M','Asia',26.23,50.59],
+  'qa':['Doha','2.9M','Asia',25.29,51.53],
+  'om':['Muscat','4.5M','Asia',23.61,58.59],
+  'lb':['Beirut','5.4M','Asia',33.89,35.50],
+  'jp':['Tokyo','126M','Asia',35.68,139.69],
+  'cn':['Beijing','1.4B','Asia',39.91,116.39],
+  'kr':['Seoul','52M','Asia',37.57,126.98],
+  'kh':['Phnom Penh','16M','Asia',11.56,104.93],
+  'vn':['Hanoi','97M','Asia',21.03,105.85],
+  'th':['Bangkok','70M','Asia',13.75,100.52],
+  'mm':['Naypyidaw','55M','Asia',19.74,96.08],
+  'ph':['Manila','110M','Asia',14.60,120.98],
+  'la':['Vientiane','7.2M','Asia',17.97,102.62],
+  'bn':['Bandar Seri Begawan','440K','Asia',4.94,114.95],
+  'tl':['Dili','1.3M','Asia',-8.56,125.58],
+  'mn':['Ulaanbaatar','3.3M','Asia',47.91,106.88],
+  'tw':['Taipei','24M','Asia',25.05,121.55],
+  'kp':['Pyongyang','26M','Asia',39.03,125.75],
+  'in':['New Delhi','1.4B','Asia',28.61,77.21],
+  'bd':['Dhaka','166M','Asia',23.72,90.41],
+  'lk':['Colombo','22M','Asia',6.93,79.85],
+  'np':['Kathmandu','29M','Asia',27.71,85.32],
+  'af':['Kabul','39M','Asia',34.53,69.18],
+  'kz':['Astana','19M','Asia',51.18,71.45],
+  'kg':['Bishkek','6.5M','Asia',42.87,74.59],
+  'tj':['Dushanbe','9.5M','Asia',38.56,68.77],
+  'il':['Jerusalem','9.3M','Asia',31.77,35.22],
+  'ir':['Tehran','85M','Asia',35.69,51.42],
+  'us':['Washington D.C.','331M','Americas',38.91,-77.04],
+  'ca':['Ottawa','38M','Americas',45.42,-75.69],
+  'mx':['Mexico City','128M','Americas',19.43,-99.13],
+  'cu':['Havana','11M','Americas',23.14,-82.36],
+  'jm':['Kingston','3M','Americas',17.99,-76.79],
+  'do':['Santo Domingo','11M','Americas',18.48,-69.90],
+  'ht':['Port-au-Prince','11M','Americas',18.54,-72.34],
+  'bb':['Bridgetown','290K','Americas',13.10,-59.62],
+  'tt':['Port of Spain','1.4M','Americas',10.65,-61.52],
+  'bs':['Nassau','390K','Americas',25.05,-77.34],
+  'gt':['Guatemala City','17M','Americas',14.64,-90.51],
+  'sv':['San Salvador','6.5M','Americas',13.69,-89.22],
+  'hn':['Tegucigalpa','10M','Americas',14.10,-87.21],
+  'ni':['Managua','6.6M','Americas',12.13,-86.29],
+  'cr':['San José','5.1M','Americas',9.93,-84.08],
+  'pa':['Panama City','4.4M','Americas',8.99,-79.52],
+  'bz':['Belmopan','400K','Americas',17.25,-88.77],
+  'dm':['Roseau','72K','Americas',15.30,-61.39],
+  'lc':['Castries','184K','Americas',14.01,-60.99],
+  'vc':['Kingstown','110K','Americas',13.16,-61.22],
+  'ag':['Saint John\'s','98K','Americas',17.12,-61.85],
+  'kn':['Basseterre','53K','Americas',17.30,-62.72],
+  'gd':['St. George\'s','113K','Americas',12.05,-61.75],
+  'br':['Brasília','214M','Americas',-15.78,-47.93],
+  'ar':['Buenos Aires','45M','Americas',-34.60,-58.38],
+  'uy':['Montevideo','3.5M','Americas',-34.90,-56.19],
+  'cl':['Santiago','19M','Americas',-33.46,-70.65],
+  'co':['Bogotá','51M','Americas',4.71,-74.07],
+  've':['Caracas','28M','Americas',10.49,-66.88],
+  'ec':['Quito','18M','Americas',-0.22,-78.51],
+  'pe':['Lima','33M','Americas',-12.05,-77.04],
+  'bo':['Sucre','12M','Americas',-19.03,-65.26],
+  'py':['Asunción','7.4M','Americas',-25.29,-57.65],
+  'gy':['Georgetown','790K','Americas',6.80,-58.16],
+  'sr':['Paramaribo','590K','Americas',5.87,-55.17],
+  'za':['Pretoria','60M','Africa',-25.74,28.19],
+  'mw':['Lilongwe','19M','Africa',-13.97,33.79],
+  'na':['Windhoek','2.6M','Africa',-22.56,17.08],
+  'bw':['Gaborone','2.4M','Africa',-24.65,25.91],
+  'sz':['Mbabane','1.2M','Africa',-26.32,31.14],
+  'ls':['Maseru','2.1M','Africa',-29.32,27.48],
+  'mg':['Antananarivo','28M','Africa',-18.91,47.54],
+  'mu':['Port Louis','1.3M','Africa',-20.16,57.50],
+  'sc':['Victoria','98K','Africa',-4.62,55.45],
+  'cd':['Kinshasa','100M','Africa',-4.32,15.32],
+  'cg':['Brazzaville','5.8M','Africa',-4.27,15.28],
+  'cf':['Bangui','4.9M','Africa',4.36,18.56],
+  'gq':['Malabo','1.4M','Africa',3.75,8.78],
+  'ao':['Luanda','34M','Africa',-8.84,13.23],
+  'rw':['Kigali','13M','Africa',-1.95,30.06],
+  'bi':['Gitega','12M','Africa',-3.43,29.93],
+  'ne':['Niamey','24M','Africa',13.51,2.12],
+  'gm':['Banjul','2.4M','Africa',13.45,-16.58],
+  'gw':['Bissau','2M','Africa',11.86,-15.60],
+  'cv':['Praia','560K','Africa',14.93,-23.51],
+  'st':['São Tomé','220K','Africa',0.34,6.73],
+  'km':['Moroni','870K','Africa',-11.70,43.26],
+  'sb':['Honiara','720K','Oceania',-9.43,160.05],
+  'vu':['Port Vila','320K','Oceania',-17.73,168.32],
+  'ws':['Apia','200K','Oceania',-13.83,-171.77],
+  'to':['Nukualofa','100K','Oceania',-21.14,-175.22],
+  'pw':['Ngerulmud','18K','Oceania',7.50,134.62],
+  'nr':['Yaren','10K','Oceania',-0.55,166.92],
+  'ki':['South Tarawa','120K','Oceania',1.33,173.00],
+  'fm':['Palikir','115K','Oceania',6.92,158.16],
+  'mh':['Majuro','42K','Oceania',7.07,171.38],
+  'ck':['Avarua','17K','Oceania',-21.21,-159.78],
+  'es':['Madrid','47M','Europe',40.42,-3.70],
+  'pt':['Lisbon','10M','Europe',38.72,-9.14],
+  'gr':['Athens','10.7M','Europe',37.98,23.73],
+  'ch':['Bern','8.7M','Europe',46.95,7.44],
+  'hr':['Zagreb','4M','Europe',45.81,15.98],
+  'rs':['Belgrade','7M','Europe',44.80,20.46],
+  'al':['Tirana','2.8M','Europe',41.33,19.83],
+  'by':['Minsk','9.4M','Europe',53.90,27.57],
+  'lv':['Riga','1.8M','Europe',56.95,24.11],
+  'lt':['Vilnius','2.8M','Europe',54.69,25.28],
+  'ee':['Tallinn','1.3M','Europe',59.44,24.75],
+  'sk':['Bratislava','5.5M','Europe',48.15,17.11],
+  'si':['Ljubljana','2.1M','Europe',46.05,14.51],
+  'cz':['Prague','10.7M','Europe',50.09,14.42],
+  'cy':['Nicosia','1.2M','Europe',35.17,33.36],
+  'mt':['Valletta','520K','Europe',35.90,14.51],
+  'ba':['Sarajevo','3.3M','Europe',43.85,18.36],
+  'me':['Podgorica','620K','Europe',42.44,19.26],
+  'mk':['Skopje','2.1M','Europe',41.99,21.43],
+  'sm':['San Marino','34K','Europe',43.94,12.46],
+  'li':['Vaduz','38K','Europe',47.14,9.52],
+  'va':['Vatican City','800','Europe',41.90,12.45],
+  'ge':['Tbilisi','3.7M','Asia',41.69,44.83],
+  'am':['Yerevan','3M','Asia',40.18,44.51],
+  'so':['Mogadishu','16M','Africa',2.05,45.34],
+  'sd':['Khartoum','44M','Africa',15.55,32.53],
+  'ss':['Juba','11M','Africa',4.86,31.57],
+  'er':['Asmara','3.5M','Africa',15.34,38.93],
+  'dj':['Djibouti','990K','Africa',11.59,43.15],
+};
+
+// flag data arrays [code, name, tip]
+const NORDIC=[['dk','Denmark','Red bg + white cross. THE original Nordic flag (~1370).'],['se','Sweden','Blue bg + golden cross. Colors from Sweden\'s coat of arms.'],['no','Norway','Red bg + blue cross outlined in white.'],['fi','Finland','White bg + blue cross. Lakes (blue) + snow (white).'],['is','Iceland','Blue bg + red cross outlined in white. Opposite of Norway!']];
+const VTRI=[['fr','France','Blue|White|Red. Original tricolor — 1789 Revolution.'],['it','Italy','Green|White|Red. Like France but green replaces blue.'],['ie','Ireland','Green|White|Orange. Catholics|Peace|Protestants.'],['ci','Côte d\'Ivoire','Orange|White|Green. MIRROR of Ireland! Green on left = Ireland.'],['be','Belgium','Black|Yellow|Red. Vertical — don\'t confuse with Germany\'s horizontal.'],['ml','Mali','Green|Yellow|Red. Pan-African vertical tricolor.'],['gn','Guinea','Red|Yellow|Green. Exact REVERSE of Mali!'],['cm','Cameroon','Green|Red|Yellow + yellow star in center.'],['sn','Senegal','Green|Yellow|Red + green star.'],['ro','Romania','Blue|Yellow|Red. Nearly identical to Chad — Romania\'s blue is slightly lighter.'],['td','Chad','Blue|Yellow|Red. Nearly identical to Romania — Chad\'s blue is a touch darker.'],['md','Moldova','Blue|Yellow|Red + coat of arms.'],['ad','Andorra','Blue|Yellow|Red + coat of arms.'],['ng','Nigeria','Green|White|Green. NO symbol — simplest Pan-African flag.']];
+const HTRI=[['de','Germany','Black|Red|Gold. "BRG = Berlin Rocks Gold." Anchor for European tricolors.'],['nl','Netherlands','Red|White|Blue (top→bottom).'],['lu','Luxembourg','Red|White|Cyan-Blue. Same as Netherlands but blue is much LIGHTER.'],['ru','Russia','White|Blue|Red. White on top.'],['at','Austria','Red|White|Red. One of the OLDEST tricolors (1230!).'],['hu','Hungary','Red|White|Green.'],['bg','Bulgaria','White|Green|Red.'],['pl','Poland','White|Red. WHITE on top — "Poland is Polite, white goes first."'],['ye','Yemen','Red|White|Black. Pan-Arab, no symbols.'],['sy','Syria','Red|White|Black + 2 green stars.'],['iq','Iraq','Red|White|Black + green Arabic text.'],['eg','Egypt','Red|White|Black + golden Eagle of Saladin.'],['ua','Ukraine','Blue|Yellow. Sky over wheat fields.'],['ee','Estonia','Blue|Black|White. Sky, soil, snow.']];
+const UJ=[['gb','United Kingdom','Original Union Jack. St George + St Andrew + St Patrick combined.'],['au','Australia','Union Jack + Southern Cross + 7-point Commonwealth Star. 6 stars total.'],['nz','New Zealand','Union Jack + 4 RED Southern Cross stars. No Commonwealth Star.'],['fj','Fiji','Light blue + Union Jack + coat of arms.'],['pg','Papua New Guinea','Diagonal split: Bird of Paradise (black) + Southern Cross (red).'],['tv','Tuvalu','Light blue + Union Jack + 9 yellow stars = map of islands.']];
+const CRESCENT=[['tr','Turkey','Red bg + white crescent & star.'],['pk','Pakistan','Dark green + white stripe + crescent & star.'],['dz','Algeria','Green|White + red crescent & star.'],['ma','Morocco','Red bg + green pentagram star.'],['tn','Tunisia','Red + white circle with crescent & star.'],['ly','Libya','Black|Red|Green + white crescent & star.'],['my','Malaysia','14 red & white stripes + blue canton with crescent & star.'],['sg','Singapore','Red|White + crescent & 5 stars on red half.'],['az','Azerbaijan','Blue|Red|Green + white crescent & 8-pointed star.'],['uz','Uzbekistan','Blue|White|Green + crescent & 12 stars.'],['tm','Turkmenistan','Green + red stripe with 5 carpet patterns + crescent & 5 stars.'],['mr','Mauritania','Green + gold crescent & star + red stripes top & bottom.']];
+const PAN_AFRICAN=[['et','Ethiopia','Green|Yellow|Red. THE original Pan-African flag. Never colonized.'],['gh','Ghana','Red|Gold|Green + black star. First sub-Saharan independence (1957).'],['ng','Nigeria','Green|White|Green. Simplest Pan-African — no symbol at all.'],['ke','Kenya','Black|Red|Green + Maasai shield & 2 spears.'],['tz','Tanzania','Green + black diagonal outlined yellow + blue triangle.'],['ug','Uganda','Black|Yellow|Red ×3 + crowned crane in white circle.'],['zw','Zimbabwe','Green/Yellow/Red/Black stripes + white triangle + Zimbabwe bird.'],['zm','Zambia','Green + right-side stripes + orange eagle.'],['mz','Mozambique','Green/Black/Yellow + red triangle + AK-47, book & hoe.'],['bj','Benin','Green (left vertical)|Yellow|Red.'],['bf','Burkina Faso','Red|Green + gold star.'],['tg','Togo','Green & yellow stripes ×5 + red canton with white star.'],['sl','Sierra Leone','Green|White|Blue.'],['ci','Côte d\'Ivoire','Orange|White|Green. Mirror of Ireland!'],['ml','Mali','Green|Yellow|Red.'],['gn','Guinea','Red|Yellow|Green. Mali reversed.'],['sn','Senegal','Green|Yellow|Red + green star.'],['lr','Liberia','11 red & white stripes + blue canton + white star. "Africa\'s USA."'],['cm','Cameroon','Green|Red|Yellow + yellow star.'],['ga','Gabon','Green|Yellow|Blue (blue=sea, unusual!).']];
+const PAN_ARAB=[['jo','Jordan','Black|White|Green + red triangle + 7-pointed white star.'],['ps','Palestine','Black|White|Green + red triangle. Like Jordan but no star.'],['sa','Saudi Arabia','Green + white Arabic text (Shahada) + white sword.'],['kw','Kuwait','Green|White|Red + black trapezoid on left.'],['ae','UAE','Red vertical stripe + Green|White|Black horizontal.'],['bh','Bahrain','Red + white 5-point serrated edge. 5 points = 5 pillars of Islam.'],['qa','Qatar','Maroon + white 9-point serrated edge. Qatar = maroon, not red.'],['om','Oman','Red|White|Green + khanjar dagger emblem.'],['lb','Lebanon','Red|White|Red + green cedar tree in center.']];
+const RED_WHITE=[['jp','Japan','White + red circle. Hinomaru = "circle of the sun."'],['pl','Poland','WHITE top, red bottom. "Poland is Polite — white first."'],['id','Indonesia','RED top, white bottom. Opposite of Poland!'],['mc','Monaco','Red top, white bottom. Same as Indonesia but squarer (4:5 ratio).'],['sg','Singapore','Red|White + crescent & 5 stars on red half.'],['ch','Switzerland','Red + white cross. One of only 2 SQUARE national flags!'],['dk','Denmark','Red + white Nordic cross. Oldest national flag.'],['tn','Tunisia','Red + white circle with crescent & star.'],['mt','Malta','White left, red right + George Cross (awarded in WWII).'],['ge','Georgia','White + 5 red crosses (1 big + 4 small in corners).']];
+const CENTRAL_AM=[['gt','Guatemala','Blue|White|Blue (vertical) + coat of arms.'],['sv','El Salvador','Blue|White|Blue (horizontal) + coat of arms.'],['hn','Honduras','Blue|White|Blue + 5 blue stars in center.'],['ni','Nicaragua','Blue|White|Blue + rainbow coat of arms.'],['cr','Costa Rica','Blue|White|Red|White|Blue + coat of arms on red stripe.']];
+const GRAN_COL=[['co','Colombia','Yellow|Blue|Red. Yellow is double width. No stars.'],['ve','Venezuela','Yellow|Blue|Red + 8 white stars in arc.'],['ec','Ecuador','Yellow|Blue|Red + large coat of arms (Galapagos condor!).']];
+const EUROPE=[['dk','Denmark','Red + white Nordic cross.'],['se','Sweden','Blue + golden Nordic cross.'],['no','Norway','Red + blue/white Nordic cross.'],['fi','Finland','White + blue Nordic cross.'],['is','Iceland','Blue + red/white Nordic cross.'],['gb','United Kingdom','Union Jack — 3 crosses combined.'],['fr','France','Blue|White|Red (vertical).'],['de','Germany','Black|Red|Gold (horizontal).'],['it','Italy','Green|White|Red (vertical).'],['es','Spain','Red|Yellow|Red — yellow is double width.'],['pt','Portugal','Green|Red (unequal) + coat of arms on border.'],['nl','Netherlands','Red|White|Blue.'],['be','Belgium','Black|Yellow|Red (vertical).'],['ch','Switzerland','Red + white cross. SQUARE flag!'],['at','Austria','Red|White|Red. One of oldest tricolors (1230).'],['pl','Poland','White|Red — WHITE on top.'],['ua','Ukraine','Blue|Yellow.'],['ru','Russia','White|Blue|Red.'],['ro','Romania','Blue|Yellow|Red — near identical to Chad!'],['hu','Hungary','Red|White|Green.'],['bg','Bulgaria','White|Green|Red.'],['gr','Greece','9 blue & white stripes + white cross on blue canton.'],['hr','Croatia','Red|White|Blue + checkered coat of arms.'],['rs','Serbia','Red|Blue|White + coat of arms.'],['al','Albania','Red + black double-headed eagle.'],['by','Belarus','Red|Green + white-red ornamental stripe on left.'],['lv','Latvia','Dark red|White|Dark red — carmine, not regular red.'],['lt','Lithuania','Yellow|Green|Red.'],['ee','Estonia','Blue|Black|White.'],['sk','Slovakia','White|Blue|Red + shield on left.'],['si','Slovenia','White|Blue|Red + coat of arms.'],['cz','Czech Republic','White|Red + blue triangle on left.'],['md','Moldova','Blue|Yellow|Red + coat of arms.'],['cy','Cyprus','White + copper map of island + olive branches.'],['mt','Malta','White|Red + George Cross.'],['lu','Luxembourg','Red|White|Cyan-Blue.'],['ba','Bosnia','Blue with yellow stars along diagonal.'],['me','Montenegro','Red + golden border + coat of arms.'],['mk','North Macedonia','Red + yellow sun with 8 rays.'],['ad','Andorra','Blue|Yellow|Red + coat of arms.'],['sm','San Marino','Blue|White (horizontal) + coat of arms.'],['li','Liechtenstein','Blue|Red (horizontal) + gold crown.'],['va','Vatican City','Yellow|White (vertical) + crossed keys + tiara. SQUARE!'],['ie','Ireland','Green|White|Orange.'],['ge','Georgia','White + 5 red crosses.'],['am','Armenia','Red|Blue|Orange (horizontal).'],['az','Azerbaijan','Blue|Red|Green + crescent & star.']];
+const N_AMERICA=[['us','United States','13 stripes (original colonies) + 50 stars (states).'],['ca','Canada','Red|White|Red + red maple leaf. Replaced Union Jack in 1965.'],['mx','Mexico','Green|White|Red + Aztec eagle on cactus eating snake.'],['cu','Cuba','5 blue & white stripes + red triangle + white star.'],['jm','Jamaica','Gold X divides green (top+bottom) + black (sides). NO red, white, or blue!'],['do','Dominican Republic','Blue|Red quarters + white cross + coat of arms.'],['ht','Haiti','Blue|Red + coat of arms.'],['bb','Barbados','Blue|Gold|Blue + broken trident (symbolizes break from colonialism).'],['tt','Trinidad and Tobago','Red + black diagonal stripe outlined in white.'],['bs','Bahamas','Aquamarine|Gold|Aquamarine + black triangle.'],['gt','Guatemala','Blue|White|Blue (vertical) + coat of arms.'],['sv','El Salvador','Blue|White|Blue (horizontal) + coat of arms.'],['hn','Honduras','Blue|White|Blue + 5 blue stars.'],['ni','Nicaragua','Blue|White|Blue + rainbow coat of arms.'],['cr','Costa Rica','Blue|White|Red|White|Blue + coat of arms.'],['pa','Panama','4 quarters: white/red star|blue|white/blue star|red.'],['bz','Belize','Blue + red stripes + coat of arms with 2 humans & tree. Most colorful!'],['dm','Dominica','Green + cross of 3 stripes + purple Sisserou parrot. Only flag with purple!'],['lc','Saint Lucia','Blue + yellow triangle + black/white triangles (volcanic peak).'],['vc','Saint Vincent','Blue|Yellow|Green + 3 green diamonds.'],['ag','Antigua and Barbuda','Black bg + inverted red V + yellow sun.'],['kn','Saint Kitts and Nevis','Green|Black diagonal + yellow stripes|Red + 2 white stars.'],['gd','Grenada','Red border + green/yellow halves + nutmeg + 7 stars.']];
+const S_AMERICA=[['br','Brazil','Green + yellow diamond + blue globe + 27 stars + white banner.'],['ar','Argentina','Light blue|White|Light blue + Sun of May (face in the sun!).'],['uy','Uruguay','9 stripes (blue & white) + Sun of May. Like Argentina but 9 stripes.'],['cl','Chile','White|Red + blue canton with white star.'],['co','Colombia','Yellow|Blue|Red. Yellow double width. No stars.'],['ve','Venezuela','Yellow|Blue|Red + 8 stars in arc.'],['ec','Ecuador','Yellow|Blue|Red + large coat of arms.'],['pe','Peru','Red|White|Red (vertical). Like Canada but no leaf.'],['bo','Bolivia','Red|Yellow|Green (horizontal) + coat of arms.'],['py','Paraguay','Red|White|Blue + different emblems on each side (unique!).'],['gy','Guyana','Green + white/black borders + yellow arrow + red triangle.'],['sr','Suriname','Green|White|Red|White|Green + yellow star.']];
+const SE_ASIA=[['jp','Japan','White + red circle. Hinomaru = "circle of the sun."'],['cn','China','Red + 1 large star + 4 small stars.'],['kr','South Korea','White + red/blue Taeguk symbol + 4 black trigrams.'],['kh','Cambodia','Blue|Red|Blue + white Angkor Wat temple. Only flag with a building!'],['vn','Vietnam','Red + gold 5-pointed star.'],['th','Thailand','Red|White|Blue|White|Red — blue center stripe widest.'],['mm','Myanmar','Yellow|Green|Red + large white star.'],['ph','Philippines','Blue|Red + white triangle + sun + 3 stars. Flip for wartime!'],['la','Laos','Red|Blue|Red + white circle (moon over the Mekong River).'],['id','Indonesia','Red|White. Red on TOP.'],['my','Malaysia','14 red & white stripes + blue canton with crescent & star.'],['sg','Singapore','Red|White + crescent & 5 stars.'],['bn','Brunei','Yellow + diagonal black & white stripes + emblem.'],['tl','Timor-Leste','Red + black triangle + yellow triangle + white star.'],['mn','Mongolia','Red|Blue|Red + golden Soyombo symbol.'],['tw','Taiwan','Red + blue canton + white sun with 12 rays.'],['kp','North Korea','Blue|Red|Blue + red star in white circle.']];
+const C_ASIA=[['in','India','Orange|White|Green + blue Ashoka Chakra (24-spoke wheel).'],['pk','Pakistan','Dark green + white stripe + crescent & star.'],['bd','Bangladesh','Green + red circle (slightly LEFT of center).'],['lk','Sri Lanka','Gold lion holding sword + green & orange stripes on left.'],['np','Nepal','Two stacked crimson pennants. ONLY non-rectangular national flag!'],['af','Afghanistan','Black|Red|Green (vertical) + emblem.'],['kz','Kazakhstan','Light blue + golden sun (32 rays) + eagle + left border pattern.'],['kg','Kyrgyzstan','Red + 40-ray sun with yurt (tunduk) inside.'],['tj','Tajikistan','Red|White|Green + gold crown & 7 stars.'],['tm','Turkmenistan','Green + red stripe with 5 carpet patterns + crescent & 5 stars.'],['uz','Uzbekistan','Blue|White|Green + crescent & 12 stars.']];
+const MIDDLE_EAST=[['il','Israel','White + 2 blue stripes + blue Star of David.'],['jo','Jordan','Black|White|Green + red triangle + 7-pointed white star.'],['ps','Palestine','Black|White|Green + red triangle. Like Jordan but no star.'],['sa','Saudi Arabia','Green + white Arabic text (Shahada) + sword.'],['ir','Iran','Green|White|Red + emblem + "God is Great" in Arabic ×22.'],['iq','Iraq','Red|White|Black + green Arabic Takbir text.'],['sy','Syria','Red|White|Black + 2 green stars.'],['lb','Lebanon','Red|White|Red + green cedar tree.'],['ye','Yemen','Red|White|Black. Pan-Arab, no emblem.'],['om','Oman','Red|White|Green + khanjar dagger emblem.'],['ae','UAE','Red vertical stripe + Green|White|Black horizontal.'],['qa','Qatar','Maroon + white 9-point serrated border.'],['bh','Bahrain','Red + white 5-point serrated border.'],['kw','Kuwait','Green|White|Red + black trapezoid.']];
+const N_AFRICA=[['ma','Morocco','Red + green pentagram star.'],['dz','Algeria','Green|White + red crescent & star.'],['tn','Tunisia','Red + white circle with crescent & star.'],['ly','Libya','Black|Red|Green + white crescent & star.'],['eg','Egypt','Red|White|Black + golden Eagle of Saladin.'],['sd','Sudan','Red|White|Black + green triangle on left.'],['ss','South Sudan','Black|Red|Green + blue triangle + gold star. Newest African country (2011)!'],['er','Eritrea','Green|Blue|Red + gold wreath & olive branch.'],['dj','Djibouti','Blue|Green + white triangle + red star.'],['so','Somalia','Light blue + white 5-pointed star.'],['et','Ethiopia','Green|Yellow|Red. The original Pan-African flag.'],['km','Comoros','Green + white crescent & 4 stars + diagonal stripes.']];
+const W_AFRICA=[['ng','Nigeria','Green|White|Green. No symbol — simplest Pan-African.'],['gh','Ghana','Red|Gold|Green + black star.'],['sn','Senegal','Green|Yellow|Red + green star.'],['ci','Côte d\'Ivoire','Orange|White|Green. Mirror of Ireland.'],['ml','Mali','Green|Yellow|Red.'],['gn','Guinea','Red|Yellow|Green. Mali reversed.'],['bj','Benin','Green (left)|Yellow|Red.'],['bf','Burkina Faso','Red|Green + gold star.'],['ne','Niger','Orange|White|Green + orange circle.'],['lr','Liberia','11 red & white stripes + blue canton + white star.'],['sl','Sierra Leone','Green|White|Blue.'],['gm','Gambia','Red|Blue|Green with white borders.'],['gw','Guinea-Bissau','Red vertical + black star, then green & yellow horizontal.'],['cv','Cape Verde','Blue + stripes + 10 yellow stars.'],['st','São Tomé & Príncipe','Green|Yellow|Green + red triangle + 2 black stars.'],['tg','Togo','Green & yellow stripes ×5 + red canton + white star.'],['mr','Mauritania','Green + gold crescent & star + red stripes.']];
+const CE_AFRICA=[['cd','DR Congo','Blue + red diagonal with yellow border + yellow star.'],['cg','Congo','Green|Yellow|Red diagonal stripes.'],['cf','Central African Rep.','Blue|White|Green|Yellow|Red + red vertical stripe + yellow star.'],['cm','Cameroon','Green|Red|Yellow (vertical) + yellow star.'],['td','Chad','Blue|Yellow|Red. Nearly identical to Romania!'],['gq','Equatorial Guinea','Green|White|Red + blue triangle + coat of arms.'],['ga','Gabon','Green|Yellow|Blue.'],['ao','Angola','Red|Black + gold machete, star & cogwheel.'],['ke','Kenya','Black|Red|Green + Maasai shield & 2 spears.'],['tz','Tanzania','Green + black diagonal outlined yellow + blue triangle.'],['ug','Uganda','Black|Yellow|Red ×3 + crowned crane in white circle.'],['rw','Rwanda','Blue|Yellow|Green + yellow sun.'],['bi','Burundi','Red|Green diagonal + white cross + 3 red stars.']];
+const S_AFRICA_R=[['za','South Africa','6 colors: green Y-shape, black/yellow/white borders, red/white/blue right.'],['mw','Malawi','Black|Red|Green + red rising sun.'],['zm','Zambia','Green + right-side stripes + orange eagle.'],['zw','Zimbabwe','Green/Yellow/Red/Black stripes + white triangle + Zimbabwe bird.'],['na','Namibia','Blue diagonal + red diagonal + green triangle + yellow sun.'],['bw','Botswana','Blue|White|Black|White|Blue. Simplest in Africa.'],['sz','Eswatini','Blue|Red|Yellow + Nguni shield & spears.'],['ls','Lesotho','Blue|White|Green + black Basotho hat.'],['mg','Madagascar','White (left vertical)|Red|Green.'],['mu','Mauritius','Red|Blue|Yellow|Green — 4 equal horizontal stripes.'],['mz','Mozambique','Green/Black/Yellow + red triangle + AK-47, book & hoe.'],['sc','Seychelles','5 colored rays from bottom-left corner: blue, yellow, red, white, green.']];
+const OCEANIA=[['au','Australia','Blue + Union Jack + Southern Cross + 7-point Commonwealth Star.'],['nz','New Zealand','Blue + Union Jack + 4 RED Southern Cross stars.'],['pg','Papua New Guinea','Diagonal: Bird of Paradise (black) + Southern Cross (red).'],['fj','Fiji','Light blue + Union Jack + coat of arms.'],['sb','Solomon Islands','Blue (top-left)|Green (bottom-right) + yellow diagonal + 5 white stars.'],['vu','Vanuatu','Red|Green + black triangle + yellow Y-shape + emblem.'],['ws','Samoa','Red + blue canton with 5 white Southern Cross stars.'],['to','Tonga','Red + white canton with red cross.'],['pw','Palau','Light blue + yellow circle (off-center moon over ocean).'],['nr','Nauru','Blue + yellow stripe + white 12-pointed star below stripe.'],['ki','Kiribati','Red (top) + blue waves + yellow frigate bird over rising sun.'],['fm','Micronesia','Light blue + 4 white stars in diamond.'],['mh','Marshall Islands','Blue + orange & white diagonal stripes + white 24-pointed star.'],['tv','Tuvalu','Light blue + Union Jack + 9 yellow stars = map of islands.'],['ck','Cook Islands','Blue + Union Jack + 15 white stars in circle.']];
+const CONFUSABLE=[{a:['ro','Romania'],b:['td','Chad'],trick:'Nearly identical. Romania\'s blue is slightly lighter. Both vertical blue-yellow-red.'},
+{a:['id','Indonesia'],b:['mc','Monaco'],trick:'Same red-over-white! Monaco is squarer (4:5 ratio vs Indonesia\'s 2:3).'},
+{a:['no','Norway'],b:['is','Iceland'],trick:'Swap the colors: Norway = red background/blue cross. Iceland = blue background/red cross.'},
+{a:['au','Australia'],b:['nz','New Zealand'],trick:'NZ has 4 red stars, no 7-point Commonwealth Star. Australia has 6 stars total.'},
+{a:['ie','Ireland'],b:['ci','Côte d\'Ivoire'],trick:'Exact mirror. Ireland = green on LEFT. "I comes before O in the alphabet."'},
+{a:['ml','Mali'],b:['gn','Guinea'],trick:'Same 3 colors (green, yellow, red) — just reversed order.'},
+{a:['nl','Netherlands'],b:['lu','Luxembourg'],trick:'Same stripes. Luxembourg\'s blue is much lighter (almost cyan). "Lux is lighter."'},
+{a:['pl','Poland'],b:['id','Indonesia'],trick:'Both red & white. Poland = WHITE on top. Indonesia = RED on top.'},
+{a:['co','Colombia'],b:['ve','Venezuela'],trick:'Both yellow-blue-red. Colombia has NO stars. Venezuela has 8 stars in an arc.'},
+{a:['sy','Syria'],b:['iq','Iraq'],trick:'Both red-white-black. Syria has 2 green stars. Iraq has green Arabic text.'},
+{a:['uy','Uruguay'],b:['ar','Argentina'],trick:'Both have "Sun of May." Uruguay has 9 stripes, Argentina has 3.'},
+{a:['bh','Bahrain'],b:['qa','Qatar'],trick:'Both red + white serrated border. Bahrain = red, 5 points. Qatar = maroon, 9 points.'},
+{a:['sk','Slovakia'],b:['ru','Russia'],trick:'Both white-blue-red horizontal. Slovakia has a coat of arms/shield on the left.'},
+{a:['nz','New Zealand'],b:['au','Australia'],trick:'NZ = 4 red stars only. Australia = 6 stars + 7-point Commonwealth Star.'}];
+const UNIQUE=[{code:'np',name:'Nepal',why:'ONLY non-rectangular national flag — two stacked triangular pennants.',badge:'🔺 Unique Shape'},
+{code:'ch',name:'Switzerland',why:'One of only 2 SQUARE national flags (Vatican City is the other).',badge:'⬛ Square Flag'},
+{code:'va',name:'Vatican City',why:'The other square flag — gold & white with Papal crossed keys & crown.',badge:'⬛ Square Flag'},
+{code:'jm',name:'Jamaica',why:'Only flag with NO red, white, or blue — the 3 most common flag colors.',badge:'🚫 No RWB'},
+{code:'bz',name:'Belize',why:'Most colors of any flag (~12) — includes 2 human figures!',badge:'🎨 Most Colorful'},
+{code:'mz',name:'Mozambique',why:'Only flag with a modern weapon — an AK-47 rifle.',badge:'⚔️ Modern Weapon'},
+{code:'kh',name:'Cambodia',why:'Only flag with a building — the Angkor Wat temple.',badge:'🏛️ Has a Building'},
+{code:'cy',name:'Cyprus',why:'Only flag with the actual map of the country on it.',badge:'🗺️ Has a Map'},
+{code:'ph',name:'Philippines',why:'Flippable war flag — blue on top = peace, red on top = wartime!',badge:'🔄 Flippable'},
+{code:'kg',name:'Kyrgyzstan',why:'Red + sun with a yurt\'s wooden ceiling (tunduk) inside it.',badge:'🏕️ Unique Symbol'},
+{code:'sc',name:'Seychelles',why:'5 colored rays from the bottom-left corner — most dynamic design.',badge:'🌈 5 Ray Colors'},
+{code:'za',name:'South Africa',why:'6 colors with a Y-shaped design — most complex geometric layout.',badge:'🔶 Most Complex'},
+{code:'bb',name:'Barbados',why:'"Broken" trident — left prong missing, symbolizes break from colonialism.',badge:'🔱 Broken Symbol'},
+{code:'dm',name:'Dominica',why:'Only flag with purple — from the rare Sisserou parrot. Purple is almost never used on flags!',badge:'💜 Has Purple'}];
+const PLAN=[{days:'Days 1–2',focus:'Unique flags (14)',strategy:'Learn the standouts first — Nepal, Japan, Switzerland, Jamaica, etc.',review:false},{days:'Days 3–4',focus:'Nordic Cross (5)',strategy:'Denmark first. Then: background color? Cross color?',review:false},{days:'Days 5–6',focus:'Vertical Tricolors (14)',strategy:'France as anchor. Left color = identifier.',review:false},{days:'Days 7–8',focus:'Horizontal Tricolors (14)',strategy:'Germany as anchor. Red/White/Black = Pan-Arab family.',review:false},{days:'Days 9–10',focus:'Union Jack Family (6)',strategy:'UK flag construction. Australia vs NZ distinction.',review:false},{days:'Days 11–12',focus:'Star & Crescent (12)',strategy:'Background color = identifier. Red=Turkey, Green=Pakistan.',review:false},{days:'Days 13–14',focus:'REVIEW + Confusable Pairs',strategy:'Test all 65 flags so far. Extra time on confusable pairs!',review:true},{days:'Days 15–16',focus:'Europe (remaining ~25)',strategy:'Spain, Portugal, Greece, Austria, Czech, Serbia, Georgia, Armenia, etc.',review:false},{days:'Days 17–18',focus:'Americas North (23)',strategy:'USA and Canada as anchors. Central America blue/white family.',review:false},{days:'Days 19–20',focus:'Americas South (12)',strategy:'Gran Colombia anchor. Brazil\'s complex flag.',review:false},{days:'Days 21–22',focus:'Asia East & SE (17)',strategy:'Japan anchor. Cambodia has a building. Philippines flips. Nepal is the triangle.',review:false},{days:'Days 23–24',focus:'Middle East (14)',strategy:'Pan-Arab palette + crescent family. Saudi = only with Arabic text.',review:false},{days:'Days 25–26',focus:'Africa all (54)',strategy:'Pan-African anchor (Ethiopia/Ghana). Learn by sub-region.',review:false},{days:'Days 27–28',focus:'Oceania (15)',strategy:'Union Jack family + unique island designs.',review:false},{days:'Days 29–30',focus:'FULL REVIEW + Quiz',strategy:'All 195 flags. Use GuessTheThing.io timed quiz. Aim for 80%+!',review:true}];
+const MNEMONICS=[['Germany','BRG = "Berlin Rocks Gold" — Black, Red, Gold top to bottom.'],['Netherlands vs Luxembourg','"Lux is lighter" — Luxembourg\'s blue is lighter/cyan. Netherlands is dark blue.'],['Nordic Cross family','"Denmark made them all" — Denmark\'s cross is the original; others just recolored it.'],['Ireland vs Côte d\'Ivoire','"Ireland: I before O in alphabet" — green on LEFT for Ireland.'],['Poland vs Indonesia','"Poland is Polite — white goes first" — white on top. Indonesia = red on top.'],['Australia vs New Zealand','"Australia is bigger = more stars" — 6 stars vs NZ\'s 4 red stars.'],['Colombia/Venezuela/Ecuador','"Gran Colombia was one country" — all share yellow-blue-red. Symbols differ.'],['Central America (5 flags)','"They used to be ONE country" — Federal Republic of Central America 1823–1841.'],['Pan-African (50+ flags)','"Ethiopia inspired them all" — the only African nation never colonized.'],['Pan-Arab colors','"4 Arab dynasties, 4 colors" — black, white, green, red honor 4 historical caliphates.'],['Japan','Hinomaru = "circle of the sun" — simplest major flag, impossible to forget.'],['Qatar vs Bahrain','"Qatar is darker" — maroon not red. Qatar has 9 points, Bahrain has 5.'],['Nepal','"Nepal is the odd shape out" — the ONLY non-rectangular flag.'],['Switzerland','"Square like a Swiss chocolate box" — Switzerland and Vatican are the 2 square flags.'],['Bangladesh','Green + red circle slightly LEFT of center (not centered like Japan).']];
+const GAMES=[{name:'Odd One Out',desc:'Show 4 flags — 3 from same family, 1 intruder. First to explain WHY wins. Builds pattern recognition fast!'},{name:'30-Second Sprint',desc:'Set a timer. List every flag from one continent from memory. Beat your own record!'},{name:'Story Chain',desc:'Connect 5 flags with a story: "The Nordic sailors sailed to France, then Italy, then Ireland…"'},{name:'The Delta Game',desc:'Pick two similar flags. First to name the ONE key difference wins.'},{name:'Flag Bingo',desc:'Each player writes 5 countries. Describe a flag — first to cross off 5 wins!'},{name:'Region Race',desc:'One person names a region, the other names every flag they can in 60 seconds.'},{name:'Flip & Reveal',desc:'Use the Quiz tab — flip the card. If you knew it in 3 seconds, mark ✓ Known!'}];
+const SITES=[{name:'GuessTheThing.io',url:'https://guessthething.io/blog/learn-world-flags-guide',badge:'⭐ Best Overall',color:'#0d7a6e',desc:'Comprehensive flag guide organized by pattern + timed quiz. Covers all 197 flags, confusable pairs, 30-day plan.'},{name:'FlagLookup.com',url:'https://flaglookup.com',badge:'🔍 Best for Exploring',color:'#c97b00',desc:'Search flags by color, symbol, or pattern. Perfect when you see a flag but can\'t name it.'},{name:'Quizlet',url:'https://quizlet.com',badge:'📚 Already Using',color:'#2d5a7a',desc:'Create custom sets by pattern group — don\'t do all 195 at once! Make a "Nordic Cross" set of 5.'},{name:'World Geography Games',url:'https://world-geography-games.com/en/flags_world.html',badge:'⏱️ Best Timed Quiz',color:'#c94a2a',desc:'Multiple-choice flag quizzes with timer. Tests speed recognition.'},{name:'Sporcle',url:'https://www.sporcle.com',badge:'💪 Best Challenge',color:'#5a3b8f',desc:'Type the country name from flag images. More challenging than multiple-choice.'},{name:'Wikipedia — Flags by Color',url:'https://en.wikipedia.org/wiki/List_of_flags_by_color_combination',badge:'📖 Best Reference',color:'#1a2b4a',desc:'Every flag sorted by color combination. Great when studying a color family.'}];
+
+// Continent groups for progress rings
+const CONTINENT_GROUPS={
+  'Europe':EUROPE.map(f=>f[0]),
+  'Americas':([...N_AMERICA,...S_AMERICA]).map(f=>f[0]),
+  'Asia':([...SE_ASIA,...C_ASIA,...MIDDLE_EAST]).map(f=>f[0]),
+  'Africa':([...N_AFRICA,...W_AFRICA,...CE_AFRICA,...S_AFRICA_R]).map(f=>f[0]),
+  'Oceania':OCEANIA.map(f=>f[0]),
+};
+// Deduplicate within each group
+Object.keys(CONTINENT_GROUPS).forEach(k=>{
+  CONTINENT_GROUPS[k]=[...new Set(CONTINENT_GROUPS[k])];
+});
+const CONTINENT_COLORS={'Europe':'#2d5a7a','Americas':'#c94a2a','Asia':'#5a3b8f','Africa':'#0d7a6e','Oceania':'#e09000'};
+
+// ══════════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════════
+let currentPlayer=1;
+let state={
+  1:{known:[],tricky:[]},
+  2:{known:[],tricky:[]}
+};
+try{
+  const s=localStorage.getItem('flagState');
+  if(s) state=JSON.parse(s);
+}catch(e){}
+
+function saveState(){
+  localStorage.setItem('flagState',JSON.stringify(state));
+  updateStats();
+  updateContinentRings();
+}
+function getKnown(){return state[currentPlayer].known||[];}
+function addKnown(code){
+  if(!state[currentPlayer].known.includes(code)) state[currentPlayer].known.push(code);
+  state[currentPlayer].tricky=state[currentPlayer].tricky.filter(c=>c!==code);
+  saveState();
+}
+function removeKnown(code){
+  state[currentPlayer].known=state[currentPlayer].known.filter(c=>c!==code);
+  saveState();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// STREAK
+// ══════════════════════════════════════════════════════════════════
+function updateStreak(){
+  const today=new Date().toDateString();
+  let streakData={count:0,lastDate:''};
+  try{streakData=JSON.parse(localStorage.getItem('streak')||'{}');}catch(e){}
+  if(streakData.lastDate===today){
+    document.getElementById('streak-num').textContent=streakData.count||1;
+    return;
+  }
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  if(streakData.lastDate===yesterday){
+    streakData.count=(streakData.count||0)+1;
+  } else {
+    streakData.count=1;
+  }
+  streakData.lastDate=today;
+  localStorage.setItem('streak',JSON.stringify(streakData));
+  document.getElementById('streak-num').textContent=streakData.count;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// STATS & PROGRESS
+// ══════════════════════════════════════════════════════════════════
+function updateStats(){
+  const k=getKnown().length;
+  const pct=Math.round(k/195*100);
+  document.getElementById('known-count').textContent=k;
+  document.getElementById('pct-count').textContent=pct+'%';
+  document.getElementById('progress-text').textContent=`${k} of 195 known`;
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('q-known').textContent=k;
+  const pname=currentPlayer===1?'Player 1':'Player 2';
+  document.getElementById('player-name-label').textContent=`${pname}'s progress`;
+  // update all known-btns
+  document.querySelectorAll('.flag-card').forEach(c=>{
+    const code=c.dataset.code;
+    const isK=getKnown().includes(code);
+    c.classList.toggle('known',isK);
+    const btn=c.querySelector('.known-btn');
+    if(btn) btn.textContent=isK?'✓':'○';
+  });
+}
+
+function updateContinentRings(){
+  Object.keys(CONTINENT_GROUPS).forEach(cont=>{
+    const codes=CONTINENT_GROUPS[cont];
+    const known=codes.filter(c=>getKnown().includes(c)).length;
+    const total=codes.length;
+    const pct=total>0?known/total:0;
+    const el=document.getElementById('ring-fill-'+cont);
+    if(!el) return;
+    const r=24; const circ=2*Math.PI*r;
+    el.style.strokeDasharray=circ;
+    el.style.strokeDashoffset=circ-(circ*pct);
+    const center=document.getElementById('ring-center-'+cont);
+    if(center) center.textContent=Math.round(pct*100)+'%';
+    const sub=document.getElementById('ring-sub-'+cont);
+    if(sub) sub.textContent=`${known}/${total}`;
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════
+// PLAYER SWITCH
+// ══════════════════════════════════════════════════════════════════
+function switchPlayer(n){
+  currentPlayer=n;
+  document.getElementById('pbtn1').classList.toggle('active',n===1);
+  document.getElementById('pbtn2').classList.toggle('active',n===2);
+  updateStats();
+  updateContinentRings();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// FLAG IMAGE
+// ══════════════════════════════════════════════════════════════════
+function flagSrc(code,w=160){return `https://flagcdn.com/w${w}/${code.toLowerCase()}.png`;}
+
+// ══════════════════════════════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════════════════════════════
+function openModal(code, name, tip){
+  const meta=COUNTRY_META[code]||['Unknown','Unknown','Unknown',0,0];
+  const [capital,pop,continent,lat,lng]=meta;
+  const mapKey='AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'; // public embed key
+  const mapSrc=`https://www.google.com/maps/embed/v1/place?key=${mapKey}&q=${encodeURIComponent(name)}&zoom=4`;
+  document.getElementById('modal-flag-bg').src=flagSrc(code,320);
+  document.getElementById('modal-flag-main').src=flagSrc(code,320);
+  document.getElementById('modal-name').textContent=name;
+  document.getElementById('modal-continent').textContent=continent+' · '+code.toUpperCase();
+  document.getElementById('modal-tip').textContent='💡 '+tip;
+  document.getElementById('modal-facts').innerHTML=`
+    <div class="fact-card"><div class="fact-label">Capital</div><div class="fact-value">${capital}</div></div>
+    <div class="fact-card"><div class="fact-label">Population</div><div class="fact-value">${pop}</div></div>
+    <div class="fact-card"><div class="fact-label">Continent</div><div class="fact-value">${continent}</div></div>
+    <div class="fact-card"><div class="fact-label">ISO Code</div><div class="fact-value">${code.toUpperCase()}</div></div>`;
+  const wikiUrl=`https://en.wikipedia.org/wiki/${encodeURIComponent(name)}`;
+  const mapsUrl=`https://www.google.com/maps/search/${encodeURIComponent(name)}`;
+  const isKnown=getKnown().includes(code);
+  document.getElementById('modal-actions').innerHTML=`
+    <a class="modal-btn map" href="${mapsUrl}" target="_blank" rel="noopener">🗺️ Google Maps</a>
+    <a class="modal-btn wiki" href="${wikiUrl}" target="_blank" rel="noopener">📖 Wikipedia</a>
+    <button class="modal-btn speak" onclick="speak('${name.replace(/'/,"\\'")}')">🔊 Pronounce</button>
+    <button class="modal-btn known" onclick="toggleKnownModal('${code}',this)" style="background:${isKnown?'#2ecc71':'#eef2f7'};color:${isKnown?'#fff':'#1a2b4a'};">${isKnown?'✓ Known':'Mark as Known'}</button>`;
+  // Use OpenStreetMap embed instead (no API key needed)
+  const osmSrc=`https://www.openstreetmap.org/export/embed.html?bbox=${lng-8},${lat-6},${lng+8},${lat+6}&layer=mapnik&marker=${lat},${lng}`;
+  document.getElementById('modal-map').src=osmSrc;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(e){if(e.target===document.getElementById('modal-overlay')) closeModalDirect();}
+function closeModalDirect(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function toggleKnownModal(code,btn){
+  if(getKnown().includes(code)){
+    removeKnown(code);
+    btn.textContent='Mark as Known';
+    btn.style.background='#eef2f7';
+    btn.style.color='#1a2b4a';
+  } else {
+    addKnown(code);
+    btn.textContent='✓ Known';
+    btn.style.background='#2ecc71';
+    btn.style.color='#fff';
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// TEXT TO SPEECH
+// ══════════════════════════════════════════════════════════════════
+function speak(name){
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(name);
+  u.rate=0.85; u.pitch=1;
+  window.speechSynthesis.speak(u);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CARD BUILDER
+// ══════════════════════════════════════════════════════════════════
+function makeCard(code, name, tip, opts={}){
+  const isK=getKnown().includes(code);
+  const div=document.createElement('div');
+  div.className='flag-card'+(isK?' known':'');
+  div.dataset.code=code;
+  div.dataset.name=name.toLowerCase();
+  div.dataset.tip=tip.toLowerCase();
+
+  // Speak btn
+  const spk=document.createElement('button');
+  spk.className='speak-btn'; spk.title='Pronounce country name';
+  spk.textContent='🔊';
+  spk.onclick=e=>{e.stopPropagation();speak(name);};
+
+  // Known btn
+  const kb=document.createElement('button');
+  kb.className='known-btn'; kb.title='Mark as known';
+  kb.textContent=isK?'✓':'○';
+  kb.onclick=e=>{e.stopPropagation();if(getKnown().includes(code)){removeKnown(code);div.classList.remove('known');kb.textContent='○';}else{addKnown(code);div.classList.add('known');kb.textContent='✓';}};
+
+  const front=document.createElement('div');
+  front.className='flag-front';
+
+  // Flag image — click opens modal
+  const imgWrap=document.createElement('div');
+  imgWrap.className='flag-img-wrap';
+  imgWrap.title='Click for details, map & Wikipedia';
+  imgWrap.onclick=()=>openModal(code,name,tip);
+  const img=document.createElement('img');
+  img.className='loading'; img.src=flagSrc(code); img.alt=name+' flag'; img.loading='lazy';
+  img.onload=()=>img.classList.replace('loading','loaded');
+  img.onerror=()=>{imgWrap.style.background='#e8edf3';imgWrap.innerHTML=`<span style="color:#8a96a3;font-size:11px;padding:8px;text-align:center;">${name}</span>`;};
+  imgWrap.appendChild(img);
+
+  // Info row
+  const info=document.createElement('div'); info.className='flag-info';
+  const nm=document.createElement('div'); nm.className='country-name';
+  nm.title='Click for Wikipedia';
+
+  const nmText=document.createElement('span');
+  nmText.textContent=name;
+  nmText.style.cursor='pointer';
+  nmText.onclick=e=>{e.stopPropagation();window.open(`https://en.wikipedia.org/wiki/${encodeURIComponent(name)}`,'_blank');};
+
+  const icons=document.createElement('span'); icons.className='name-icons';
+  const mapIco=document.createElement('button'); mapIco.className='name-icon'; mapIco.title='Open map'; mapIco.textContent='🗺️';
+  mapIco.onclick=e=>{e.stopPropagation();window.open(`https://www.google.com/maps/search/${encodeURIComponent(name)}`,'_blank');};
+  const wikiIco=document.createElement('button'); wikiIco.className='name-icon'; wikiIco.title='Wikipedia'; wikiIco.textContent='📖';
+  wikiIco.onclick=e=>{e.stopPropagation();window.open(`https://en.wikipedia.org/wiki/${encodeURIComponent(name)}`,'_blank');};
+  icons.appendChild(mapIco); icons.appendChild(wikiIco);
+  nm.appendChild(nmText); nm.appendChild(icons);
+
+  const tipEl=document.createElement('div'); tipEl.className='flag-tip'; tipEl.textContent=tip;
+  const codeEl=document.createElement('div'); codeEl.className='flag-code'; codeEl.textContent=code.toUpperCase();
+  info.appendChild(nm); info.appendChild(tipEl); info.appendChild(codeEl);
+  front.appendChild(imgWrap); front.appendChild(info);
+
+  // Back (quiz flip)
+  const back=document.createElement('div'); back.className='flag-back';
+  back.innerHTML=`<div class="country-name-back">${name}</div><div class="tip-back">${tip}</div>`;
+  const flipActs=document.createElement('div'); flipActs.className='flip-actions';
+  const mapA=document.createElement('a'); mapA.className='flip-link'; mapA.textContent='🗺️ Map'; mapA.href=`https://www.google.com/maps/search/${encodeURIComponent(name)}`; mapA.target='_blank'; mapA.rel='noopener';
+  const wikiA=document.createElement('a'); wikiA.className='flip-link'; wikiA.textContent='📖 Wiki'; wikiA.href=`https://en.wikipedia.org/wiki/${encodeURIComponent(name)}`; wikiA.target='_blank'; wikiA.rel='noopener';
+  flipActs.appendChild(mapA); flipActs.appendChild(wikiA);
+  back.appendChild(flipActs);
+
+  div.appendChild(spk); div.appendChild(kb); div.appendChild(front); div.appendChild(back);
+
+  if(opts.flippable){
+    imgWrap.onclick=null;
+    div.onclick=e=>{if(!e.target.closest('a')&&!e.target.closest('.known-btn')&&!e.target.closest('.speak-btn'))div.classList.toggle('flipped');};
+  }
+  return div;
+}
+
+function renderGrid(id,data,opts={}){
+  const el=document.getElementById(id); if(!el)return;
+  el.innerHTML='';
+  const seen=new Set();
+  data.forEach(([code,name,tip])=>{if(!seen.has(code)){seen.add(code);el.appendChild(makeCard(code,name,tip,opts));}});
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CONTINENT PROGRESS RINGS
+// ══════════════════════════════════════════════════════════════════
+function renderContinentRings(){
+  const el=document.getElementById('continent-progress'); el.innerHTML='';
+  Object.keys(CONTINENT_GROUPS).forEach(cont=>{
+    const codes=CONTINENT_GROUPS[cont];
+    const total=codes.length;
+    const r=24; const circ=2*Math.PI*r; const col=CONTINENT_COLORS[cont];
+    const card=document.createElement('div'); card.className='cp-card';
+    card.innerHTML=`
+      <div class="cp-ring">
+        <svg width="56" height="56" viewBox="0 0 56 56">
+          <circle class="track" cx="28" cy="28" r="${r}"/>
+          <circle class="fill" id="ring-fill-${cont}" cx="28" cy="28" r="${r}" stroke="${col}" style="stroke-dasharray:${circ};stroke-dashoffset:${circ};"/>
+        </svg>
+        <div class="cp-center" id="ring-center-${cont}">0%</div>
+      </div>
+      <div class="cp-name">${cont}</div>
+      <div class="cp-sub" id="ring-sub-${cont}">0/${total}</div>`;
+    card.onclick=()=>{
+      const tabMap={'Europe':'regions','Americas':'regions','Asia':'regions','Africa':'regions','Oceania':'regions'};
+      showPanel('regions',null);
+      document.querySelector('.tab[onclick*="regions"]').classList.add('active');
+    };
+    el.appendChild(card);
+  });
+  setTimeout(updateContinentRings,200);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// DAILY CHALLENGE
+// ══════════════════════════════════════════════════════════════════
+let allUnique=[];
+function buildAllUnique(){
+  const all=[...NORDIC,...VTRI,...HTRI,...UJ,...CRESCENT,...PAN_AFRICAN,...PAN_ARAB,...RED_WHITE,...CENTRAL_AM,...GRAN_COL,...EUROPE,...N_AMERICA,...S_AMERICA,...SE_ASIA,...C_ASIA,...MIDDLE_EAST,...N_AFRICA,...W_AFRICA,...CE_AFRICA,...S_AFRICA_R,...OCEANIA];
+  const seen=new Set();
+  allUnique=all.filter(([c])=>{if(seen.has(c))return false;seen.add(c);return true;});
+}
+function setupDaily(){
+  // Pick flag of the day using day-of-year as seed
+  const doy=Math.floor((Date.now()-new Date(new Date().getFullYear(),0,0))/(1000*60*60*24));
+  const idx=doy%allUnique.length;
+  const [code,name,tip]=allUnique[idx];
+  document.getElementById('daily-img').src=flagSrc(code,320);
+  document.getElementById('daily-img').alt=name;
+  document.getElementById('daily-name').textContent=name;
+  document.getElementById('daily-tip').textContent=tip;
+  document.getElementById('daily-map-btn').onclick=()=>window.open(`https://www.google.com/maps/search/${encodeURIComponent(name)}`,'_blank');
+  document.getElementById('daily-wiki-btn').onclick=()=>window.open(`https://en.wikipedia.org/wiki/${encodeURIComponent(name)}`,'_blank');
+  // store for quiz
+  window._dailyFlag=[code,name,tip];
+}
+function startDailyQuiz(){
+  const wrap=document.getElementById('daily-quiz-wrap');
+  wrap.style.display='block';
+  const [code,name]=window._dailyFlag||['us','United States',''];
+  // pick 3 wrong answers
+  const others=allUnique.filter(f=>f[0]!==code).sort(()=>Math.random()-0.5).slice(0,3);
+  const opts=[name,...others.map(f=>f[1])].sort(()=>Math.random()-0.5);
+  wrap.innerHTML=`<div class="dq-question">Which country does this flag belong to?</div>
+    <div class="dq-options">${opts.map(o=>`<button class="dq-opt" onclick="checkDaily(this,'${o.replace(/'/,"\\'")}','${name.replace(/'/,"\\'")}')">${o}</button>`).join('')}</div>
+    <div class="dq-result" id="dq-result"></div>`;
+}
+function checkDaily(btn,chosen,correct){
+  document.querySelectorAll('.dq-opt').forEach(b=>b.disabled=true);
+  if(chosen===correct){btn.classList.add('correct');document.getElementById('dq-result').textContent='🎉 Correct!';}
+  else{btn.classList.add('wrong');document.querySelectorAll('.dq-opt').forEach(b=>{if(b.textContent===correct)b.classList.add('correct');});document.getElementById('dq-result').textContent='Not quite — the correct answer is '+correct+'.';}
+}
+function startQuizAndGo(){showPanel('quiz',null);document.querySelector('.tab[onclick*="quiz"]').classList.add('active');}
+
+// ══════════════════════════════════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════════════════════════════════
+function startQuiz(){
+  const shuffled=[...allUnique].sort(()=>Math.random()-0.5);
+  renderGrid('grid-quiz',shuffled,{flippable:true});
+}
+function quizUnknown(){
+  const unknown=allUnique.filter(([c])=>!getKnown().includes(c));
+  renderGrid('grid-quiz',unknown.sort(()=>Math.random()-0.5),{flippable:true});
+}
+function resetProgress(){
+  if(confirm('Reset your progress? All ✓ marks will be cleared.')){
+    state[currentPlayer].known=[];state[currentPlayer].tricky=[];
+    saveState();startQuiz();
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// PAIRS, UNIQUE, PLAN, MNEMONICS, GAMES, SITES
+// ══════════════════════════════════════════════════════════════════
+function renderPairs(){
+  const el=document.getElementById('pair-grid'); el.innerHTML='';
+  CONFUSABLE.forEach(p=>{
+    const c=document.createElement('div'); c.className='pair-card';
+    c.innerHTML=`<div class="pair-flags">
+      <div class="pair-flag" onclick="openModal('${p.a[0]}','${p.a[1].replace(/'/,"\\'")}','')" title="Click for details"><img src="${flagSrc(p.a[0],160)}" alt="${p.a[1]}" loading="lazy"></div>
+      <div class="pair-vs">vs</div>
+      <div class="pair-flag" onclick="openModal('${p.b[0]}','${p.b[1].replace(/'/,"\\'")}','')" title="Click for details"><img src="${flagSrc(p.b[0],160)}" alt="${p.b[1]}" loading="lazy"></div>
+    </div>
+    <div class="pair-info"><div class="pair-names">${p.a[1]} vs ${p.b[1]}</div><div class="pair-trick">${p.trick}</div></div>`;
+    el.appendChild(c);
+  });
+}
+function renderUnique(){
+  const el=document.getElementById('unique-grid'); el.innerHTML='';
+  UNIQUE.forEach(f=>{
+    const c=document.createElement('div'); c.className='unique-card';
+    c.onclick=()=>openModal(f.code,f.name,f.why);
+    c.innerHTML=`<img class="unique-img" src="${flagSrc(f.code,320)}" alt="${f.name}" loading="lazy">
+      <div class="unique-body"><div class="unique-badge">${f.badge}</div>
+      <div class="unique-name">${f.name}</div><div class="unique-why">${f.why}</div></div>`;
+    el.appendChild(c);
+  });
+}
+function renderPlan(){
+  const el=document.getElementById('plan-grid'); el.innerHTML='';
+  PLAN.forEach(r=>{
+    const d=document.createElement('div'); d.className='plan-row'+(r.review?' review':'');
+    d.innerHTML=`<div class="plan-days">${r.days}</div><div class="plan-focus">${r.focus}</div><div class="plan-strategy">${r.strategy}</div>`;
+    el.appendChild(d);
+  });
+}
+function renderMnemonics(){
+  const el=document.getElementById('mnemonic-grid'); el.innerHTML='';
+  MNEMONICS.forEach(([c,t])=>{const d=document.createElement('div');d.className='mnemonic-row';d.innerHTML=`<div class="mnemonic-country">${c}</div><div class="mnemonic-text">${t}</div>`;el.appendChild(d);});
+}
+function renderGames(){
+  const el=document.getElementById('games-grid'); el.innerHTML='';
+  GAMES.forEach(g=>{const c=document.createElement('div');c.style.cssText='background:#fff;border-radius:12px;padding:14px;box-shadow:var(--shadow);';c.innerHTML=`<div style="font-family:Nunito,sans-serif;font-size:13px;font-weight:800;color:#1a2b4a;margin-bottom:5px;">${g.name}</div><div style="font-size:12px;color:#6b7a90;line-height:1.5;">${g.desc}</div>`;el.appendChild(c);});
+}
+function renderSites(){
+  const el=document.getElementById('sites-grid'); el.innerHTML='';
+  SITES.forEach(s=>{const c=document.createElement('div');c.className='site-card';c.style.borderLeftColor=s.color;c.innerHTML=`<div class="site-name">${s.name}</div><div class="site-url">${s.url}</div><div class="site-badge" style="background:${s.color}22;color:${s.color};">${s.badge}</div><div class="site-desc">${s.desc}</div><a class="site-link" href="${s.url}" target="_blank" rel="noopener">Open →</a>`;el.appendChild(c);});
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SEARCH
+// ══════════════════════════════════════════════════════════════════
+function doSearch(val){
+  const q=val.toLowerCase().trim();
+  let count=0;
+  document.querySelectorAll('.flag-card').forEach(c=>{
+    const m=!q||c.dataset.name.includes(q)||c.dataset.tip.includes(q)||c.dataset.code.includes(q);
+    c.style.display=m?'':'none';
+    if(m) count++;
+  });
+  document.getElementById('no-results').classList.toggle('show',count===0&&q.length>0);
+  if(q){document.querySelectorAll('.panel').forEach(p=>p.style.display='block');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));}
+  else{document.querySelectorAll('.panel').forEach(p=>{p.style.display='';p.classList.remove('active');});showPanel('home',null);}
+}
+function clearSearch(){document.getElementById('search').value='';doSearch('');}
+
+// ══════════════════════════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════════════════════════
+function showPanel(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>{p.classList.remove('active');p.style.display='';});
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const p=document.getElementById('panel-'+id);
+  if(p) p.classList.add('active');
+  if(btn) btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded',()=>{
+  buildAllUnique();
+  // Render all grids
+  renderGrid('grid-nordic',NORDIC);
+  renderGrid('grid-vtri',VTRI);
+  renderGrid('grid-htri',HTRI);
+  renderGrid('grid-uj',UJ);
+  renderGrid('grid-crescent',CRESCENT);
+  renderGrid('grid-panafrican',PAN_AFRICAN);
+  renderGrid('grid-panarab',PAN_ARAB);
+  renderGrid('grid-redwhite',RED_WHITE);
+  renderGrid('grid-centralamerica',CENTRAL_AM);
+  renderGrid('grid-grancolombia',GRAN_COL);
+  renderGrid('grid-europe',EUROPE);
+  renderGrid('grid-namerica',N_AMERICA);
+  renderGrid('grid-samerica',S_AMERICA);
+  renderGrid('grid-seasia',SE_ASIA);
+  renderGrid('grid-casia',C_ASIA);
+  renderGrid('grid-middleeast',MIDDLE_EAST);
+  renderGrid('grid-nafrica',N_AFRICA);
+  renderGrid('grid-wafrica',W_AFRICA);
+  renderGrid('grid-ceafrica',CE_AFRICA);
+  renderGrid('grid-safrica',S_AFRICA_R);
+  renderGrid('grid-oceania',OCEANIA);
+  renderPairs();
+  renderUnique();
+  renderPlan();
+  renderMnemonics();
+  renderGames();
+  renderSites();
+  renderContinentRings();
+  startQuiz();
+  setupDaily();
+  updateStats();
+  updateStreak();
+
+  window.addEventListener('scroll',()=>{document.getElementById('scroll-top').classList.toggle('visible',window.scrollY>400);});
+  if(!navigator.onLine) document.getElementById('offline-notice').style.display='block';
+  window.addEventListener('offline',()=>document.getElementById('offline-notice').style.display='block');
+  window.addEventListener('online',()=>document.getElementById('offline-notice').style.display='none');
+  document.addEventListener('keydown',e=>{if(e.key==='Escape') closeModalDirect();});
+});
+</script>
+</body>
+</html>
